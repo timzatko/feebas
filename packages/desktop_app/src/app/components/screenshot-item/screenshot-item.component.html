@@ -1,0 +1,11 @@
+<div class="item">
+    <div class="image" (click)="onScreenshotClick()"><img [src]="image" /></div>
+    <div class="bottom">
+        <mat-checkbox
+            [(ngModel)]="projectService._selected.value[screenshot.key]"
+            (ngModelChange)="onCheckboxChange()"
+            *ngIf="isCheckboxVisible"
+        ></mat-checkbox>
+        <div [ngClass]="getClass()" (click)="onLabelClick()" [title]="screenshot.key">{{ screenshot.key }}</div>
+    </div>
+</div>

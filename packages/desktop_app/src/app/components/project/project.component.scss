@@ -1,0 +1,31 @@
+.project-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100% - 56px);
+
+    @media (min-width: 435px) {
+        height: calc(100% - 64px);
+    }
+
+    > div {
+        flex: 1;
+        padding: 0 12px;
+    }
+
+    > div:nth-child(1) {
+        flex: 0 0 320px;
+    }
+
+    > div:nth-child(2) {
+        overflow-y: scroll;
+
+        .screenshots {
+            padding-top: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(calc(33% - 12px), 1fr));
+            column-gap: 12px;
+            row-gap: 12px;
+        }
+    }
+}

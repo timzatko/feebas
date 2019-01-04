@@ -1,0 +1,32 @@
+<div>
+    <div class="screenshot-header">
+        <button (click)="onBackClick()" mat-icon-button color="primary"><mat-icon>arrow_back</mat-icon></button>
+        <h1 [ngClass]="getClass()">{{ screenshot.key }}</h1>
+    </div>
+    <ng-container *ngIf="status_match">
+        <p class="success">[OK] The most recent version of this screenshot match the truth screenshot!</p>
+    </ng-container>
+    <ng-container *ngIf="status_do_not_match">
+        <p class="error">
+            [ERROR] The most recent version of this screenshot <b>does not</b> match the truth screenshot!
+        </p>
+    </ng-container>
+    <ng-container *ngIf="status_truth_does_not_exist">
+        <p class="warning">[WARNING] This screenshot does not exist in truth screenshots!</p>
+    </ng-container>
+    <ng-container *ngIf="status_truth_was_not_tested">
+        <p class="warning">[WARNING] Truth version of this screenshot exist, however it was not tested!</p>
+    </ng-container>
+
+    <mat-tab-group animationDuration="0ms">
+        <mat-tab *ngIf="screenshot.path.diff" label="difference">
+            <div class="screenshot"><img [src]="projectService.getLocalImageBase64(screenshot.path.diff)" /></div>
+        </mat-tab>
+        <mat-tab *ngIf="screenshot.path.truth" label="truth">
+            <div class="screenshot"><img [src]="projectService.getLocalImageBase64(screenshot.path.truth)" /></div>
+        </mat-tab>
+        <mat-tab *ngIf="screenshot.path.current" label="current">
+            <div class="screenshot"><img [src]="projectService.getLocalImageBase64(screenshot.path.current)" /></div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

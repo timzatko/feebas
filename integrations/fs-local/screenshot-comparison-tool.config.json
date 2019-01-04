@@ -1,0 +1,18 @@
+{
+    "projects": [
+        {
+            "name": "app",
+            "auto_run": true,
+            "screenshots": {
+                "current": {
+                    "type": "fs-local",
+                    "path": "./integrations/fs-local/current"
+                },
+                "truth": {
+                    "type": "fs-local",
+                    "path": "./integrations/fs-local/truth"
+                }
+            }
+        }
+    ]
+}

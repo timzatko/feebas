@@ -1,0 +1,16 @@
+{
+    "name": "screenshot-comparison-tool",
+    "private": true,
+    "scripts": {
+        "start": "npm run app:start",
+        "app:start": "cd packages/desktop_app && npm start",
+        "app:release": "cd packages/desktop_app && npm run app:release"
+    },
+    "devDependencies": {
+        "lerna": "^3.8.4"
+    },
+    "dependencies": {
+        "cross-env": "^5.2.0",
+        "prettier": "^1.15.3"
+    }
+}

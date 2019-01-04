@@ -1,0 +1,30 @@
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: white;
+
+    > div {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+
+        > div {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            &.msg {
+                max-width: 50%;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 24px;
+                font-size: 24px;
+            }
+        }
+    }
+}

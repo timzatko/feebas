@@ -1,0 +1,13 @@
+<form [formGroup]="form">
+    <mat-dialog-content>
+        <mat-checkbox formControlName="do_not_match"><span color="error">Not matching</span> screenshots</mat-checkbox>
+        <mat-checkbox formControlName="truth_was_not_tested">
+            <span color="warning">Not tested</span> screenshots
+        </mat-checkbox>
+        <mat-checkbox formControlName="truth_does_not_exist">
+            <span color="warning">Missing truth</span> screenshots
+        </mat-checkbox>
+        <mat-checkbox formControlName="match"><span color="success">Matching</span> screenshots</mat-checkbox>
+    </mat-dialog-content>
+    <mat-dialog-actions><button mat-flat-button color="accent" mat-dialog-close>Close</button></mat-dialog-actions>
+</form>

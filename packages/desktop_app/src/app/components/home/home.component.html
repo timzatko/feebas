@@ -1,0 +1,20 @@
+<div class="flex container v-center h-center">
+    <div>
+        <ng-container *ngIf="projects.length; else noProjects">
+            <form [formGroup]="form" (submit)="onSubmit()">
+                <div *ngIf="projects.length > 1">
+                    <mat-form-field>
+                        <mat-select placeholder="Project" formControlName="project">
+                            <mat-option *ngFor="let project of projects" [value]="project">
+                                {{ project.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </form>
+        </ng-container>
+        <ng-template #noProjects>
+            <h3>No project is defined, you can define it in configuration file.</h3>
+        </ng-template>
+    </div>
+</div>

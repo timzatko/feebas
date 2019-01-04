@@ -1,0 +1,11 @@
+<div class="flex container v-center h-center">
+    <h3 [ngSwitch]="appService.configStatus">
+        <ng-container *ngSwitchCase="configStatusValues.CONFIG_FILE_NOT_DEFINED"
+            >Config file is not defined!</ng-container
+        >
+        <ng-container *ngSwitchCase="configStatusValues.CONFIG_FILE_NOT_EXISTS"
+            >Config file does not exist!</ng-container
+        >
+        <ng-container *ngSwitchCase="configStatusValues.INCORRECT_JSON">Config JSON is invalid!</ng-container>
+    </h3>
+</div>

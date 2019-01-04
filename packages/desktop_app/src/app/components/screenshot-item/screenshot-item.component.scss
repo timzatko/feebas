@@ -1,0 +1,33 @@
+.item {
+    grid-template-rows: 1fr 20px;
+    height: 100%;
+    display: grid;
+
+    .image {
+        cursor: pointer;
+
+        img {
+            max-width: 100%;
+        }
+    }
+
+    .bottom {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: 8px;
+        align-self: center;
+        height: 100%;
+
+        .mat-checkbox {
+            display: flex;
+            justify-content: center;
+        }
+
+        .caption {
+            text-overflow: ellipsis;
+            max-width: 100%;
+            overflow: hidden;
+            cursor: pointer;
+        }
+    }
+}

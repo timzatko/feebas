@@ -1,0 +1,69 @@
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import './styles/colors';
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+app-root {
+    height: 100%;
+    display: block;
+}
+
+.container {
+    height: 100%;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    &.h-center {
+        justify-content: center;
+    }
+
+    &.v-center {
+        align-items: center;
+    }
+
+    &.flex-col {
+        flex-direction: column;
+    }
+
+    &.space-between {
+        justify-content: space-between;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+span,
+div {
+    .success,
+    &[color='success'] {
+        color: $success;
+    }
+    .warning,
+    &[color='warning'] {
+        color: $warning;
+    }
+    .error,
+    &[color='error'] {
+        color: $error;
+    }
+}
+
+.bold {
+    font-weight: bold;
+}

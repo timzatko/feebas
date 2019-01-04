@@ -1,0 +1,141 @@
+import { forkJoin, from, Observable, of, throwError } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+
+import * as request from 'request-promise-native';
+import * as unzip from 'unzipper';
+import * as path from 'path';
+import * as fs from 'fs-extra';
+
+import { Integrations } from '../models/integrations';
+
+import getIntegrationTempDir from '../scripts/get-integration-temp-dir';
+
+const getOutPath = (commitId: string) => getIntegrationTempDir('gitlab', path.join('commits', commitId.toString()));
+
+const callGitlabApi = function(_url: string, config: { json?: string } = {}) {
+    const { url, project_id, authentication } = this.integration;
+    const fullUrl = new URL(url + '/api/v4/projects/' + project_id + _url);
+    fullUrl.searchParams.set('private_token', authentication.token);
+    return request({ url: fullUrl.href, ...config });
+};
+
+const callGitlabApiJson = function(_url: string) {
+    return callGitlabApi.bind(this)(_url, { json: true });
+};
+
+const filterJobs = function(jobs) {
+    // filter jobs by name
+    const filteredJobs = jobs.filter(({ name }) => this.integration.jobs.find(job => job.name === name));
+
+    return Object.values(
+        filteredJobs.reduce((obj, job) => {
+            // filter out duplicates
+            if (!obj[job.name]) {
+                obj[job.name] = job;
+            }
+
+            // take newer jobs from the duplicates (jobs from reruns)
+            if (obj[job.name].id < job.id) {
+                obj[job.name] = job;
+            }
+            return obj;
+        }, {}),
+    );
+};
+
+const downloadArtifacts = function(job) {
+    const outPath = getOutPath(this.commitId);
+    // path where will be temporarily stored unzipped artifacts
+    const jobOutPath = getIntegrationTempDir('gitlab', path.join('jobs', job.id.toString()));
+    const callApi = callGitlabApi.bind(this);
+
+    const req = callApi('/jobs/' + job.id + '/artifacts');
+
+    return new Observable(observer => {
+        req.on('response', res => {
+            if (res.statusCode !== 200) {
+                observer.error(new Error('[gitlab] Unable to download artifacts!'));
+                observer.complete();
+                return;
+            }
+
+            const out = res.pipe(unzip.Extract({ path: jobOutPath }));
+            out.on('finish', () => {
+                // move unzipped artifacts
+                const jobConfig = this.integration.jobs.find(({ name }) => name === job.name);
+                const dstPath = this.integration.strategy === 'default' ? path.join(outPath, job.name) : outPath;
+                const jobSubPath = path.join(jobOutPath, jobConfig.path);
+                // dstPath should exists
+                fs.ensureDirSync(dstPath);
+                // if subdirectory in job artifacts exists, move it
+                if (fs.pathExistsSync(jobSubPath)) {
+                    fs.moveSync(jobSubPath, dstPath);
+                }
+                // remove remaining job artifacts
+                fs.removeSync(jobOutPath);
+
+                observer.next();
+                observer.complete();
+            });
+        });
+    });
+};
+
+const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = ({ integration, commitId, env }) => {
+    const authToken = integration.authentication.token;
+    if (!authToken) {
+        if (env.variables.hasOwnProperty('FEEBAS_GITLAB_TOKEN')) {
+            integration.authentication.token = env.variables.FEEBAS_GITLAB_TOKEN;
+        } else {
+            return throwError(
+                new Error(
+                    'Authentication token is not defined! Define it in configuration file or in environmental variable FEEBAS_GITLAB_TOKEN.',
+                ),
+            );
+        }
+    }
+
+    const callApi = callGitlabApiJson.bind({ integration });
+
+    // read commit information
+    return from(callApi('/repository/commits/' + commitId))
+        .pipe(
+            flatMap(({ last_pipeline }) => {
+                if (!last_pipeline) {
+                    return throwError(new Error(`[gitlab] Pipeline for this commit does not exist!`));
+                }
+
+                const { status, id } = last_pipeline;
+
+                if (status !== 'success' && status !== 'failed') {
+                    return throwError(new Error(`[gitlab] Pipeline is still running!`));
+                }
+
+                // get jobs for the last pipeline of the commit
+                return from(callApi('/pipelines/' + id + '/jobs?per_page=100'));
+            }),
+        )
+        .pipe(
+            flatMap(jobs => {
+                const targetJobs = filterJobs.call({ integration }, jobs);
+
+                if (!integration.jobs.every(job => targetJobs.find(({ name }) => name === job.name))) {
+                    return throwError(new Error('[gitlab] Some of the jobs did not run in the pipeline!'));
+                }
+
+                // download all artifacts
+                return forkJoin(targetJobs.map(job => downloadArtifacts.call({ integration, commitId }, job)));
+            }),
+        )
+        .pipe(
+            flatMap(() => {
+                return of({ path: getOutPath(commitId) });
+            }),
+        );
+};
+
+const integrationResolver: Integrations.Resolver<Integrations.GitLab.Interface> = {
+    pull,
+};
+
+export default integrationResolver;

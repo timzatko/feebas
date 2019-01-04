@@ -1,0 +1,48 @@
+<ng-container *ngIf="projectService.screenshots !== null">
+    <mat-toolbar color="primary">
+        <div class="flex v-center space-between">
+            <div class="flex v-center">{{ projectService.vcs.commitId }}</div>
+            <div>
+                <button *ngIf="selectedCount; let count" mat-raised-button color="accent" (click)="onApproveClick()">
+                    Approve ({{ count }})
+                </button>
+            </div>
+        </div>
+    </mat-toolbar>
+    <div class="project-container">
+        <div><app-tree (screenshotOpen)="onOpenScreenshot($event)"></app-tree></div>
+        <div>
+            <ng-container *ngIf="currentScreenshot; else default">
+                <app-screenshot [screenshot]="currentScreenshot" (back)="onCloseScreenshot()"></app-screenshot>
+            </ng-container>
+            <ng-template #default>
+                <ng-container *ngIf="projectService.filteredScreenshots.length > 0; else noScreenshots">
+                    <div class="screenshots">
+                        <app-screenshot-item
+                            *ngFor="let screenshot of projectService.filteredScreenshots"
+                            (open)="onOpenScreenshot($event)"
+                            [screenshot]="screenshot"
+                        ></app-screenshot-item>
+                    </div>
+                </ng-container>
+                <ng-template #noScreenshots>
+                    <div class="flex flex-col container v-center h-center">
+                        <h3>There are no screenshots matching the filter.</h3>
+                        <p *ngIf="!filter.match">
+                            <span class="success bold">matching</span> screenshots are filtered out.
+                        </p>
+                        <p *ngIf="!filter.truth_does_not_exist">
+                            <span class="warning bold">missing truth</span> screenshots are filtered out.
+                        </p>
+                        <p *ngIf="!filter.truth_was_not_tested">
+                            <span class="warning bold">not tested</span> screenshots are filtered out.
+                        </p>
+                        <p *ngIf="!filter.do_not_match">
+                            <span class="error bold">not matching</span> screenshots are filtered out.
+                        </p>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </div>
+    </div>
+</ng-container>
