@@ -7,6 +7,9 @@ const path = require('path');
 const { spawn } = require('child_process');
 const app = require('./app');
 const os = require('os');
+const cwd = process.cwd();
+const platform = os.platform();
+const appPath = path.join(__dirname, './app/', app.fileName[platform]);
 
 const helpText = `
 	Usage
@@ -27,24 +30,26 @@ const cli = meow(helpText, {
     },
 });
 
-const cwd = process.cwd();
-
-let configFilePath = cli.flags.c || cli.flags.config;
-if (!configFilePath) {
-    configFilePath = path.join(cwd, 'feebas.config.json');
-} else if (!path.isAbsolute(configFilePath)) {
-    configFilePath = path.join(cwd, configFilePath);
+// CHECK FEEBAS APP, IF DOES NOT EXIST, INSTALL IT
+if (!fs.existsSync(appPath)) {
+    require(path.join(__dirname, 'scripts/postinstall.js'));
 }
 
-if (!fs.existsSync(configFilePath)) {
-    console.error(`[ERROR] Configuration file ${configFilePath} does not exist!`);
+// CHECK CONFIGURATION FILE
+let configPath = cli.flags.c || cli.flags.config;
+if (!configPath) {
+    configPath = path.join(cwd, 'feebas.config.json');
+} else if (!path.isAbsolute(configPath)) {
+    configPath = path.join(cwd, configPath);
+}
+
+if (!fs.existsSync(configPath)) {
+    console.error(`[ERROR] Configuration file ${configPath} does not exist!`);
     process.exit(1);
 }
 
-const platform = os.platform();
-const appFilePath = path.join(__dirname, './app/', app.fileName[platform]);
-
-const subProcess = spawn(path.join(__dirname, 'scripts/run', `${platform}.sh`), [configFilePath, appFilePath], {
+// RUN FEEBAS
+const subProcess = spawn(path.join(__dirname, 'scripts/run', `${platform}.sh`), [configPath, appPath], {
     detached: true,
     cwd: process.cwd(),
     env: process.env,

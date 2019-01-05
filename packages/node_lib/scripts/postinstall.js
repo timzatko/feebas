@@ -11,7 +11,7 @@ const platform = os.platform();
 const url = 'https://github.com/timzatko/feebas';
 const {
     version,
-    name,
+    name, // TODO: Rename package to feebas
 } = require('./../package');
 
 const unzip = (filePath, cb) => {
@@ -26,11 +26,10 @@ const getAppFileName = () => {
     const fileName = 'feebas-' + version;
     if (platform === 'darwin') {
         return fileName + '-mac.7z';
-    } else if (platform === 'win32') {
-        // TODO:
-        return null;
     }
     // TODO:
+    console.log(`feebas is not available for platform  ${platform}`);
+    process.exit(0);
     return null;
 };
 
