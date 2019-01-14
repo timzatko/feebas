@@ -1,9 +1,10 @@
 {
-    "name": "feebas-lib",
+    "name": "feebas",
     "description": "feebas",
     "main": "index.js",
     "author": "timzatko",
-    "version": "0.1.4",
+    "version": "0.1.2",
+    "desktop_app-version": "0.1.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/timzatko/feebas"

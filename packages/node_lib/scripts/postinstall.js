@@ -9,10 +9,7 @@ const app = require('./../app');
 
 const platform = os.platform();
 const url = 'https://github.com/timzatko/feebas';
-const {
-    version,
-    name, // TODO: Rename package to feebas
-} = require('./../package');
+const feebas = require('./../package');
 
 const unzip = (filePath, cb) => {
     const folderName = tempFile();
@@ -23,7 +20,7 @@ const unzip = (filePath, cb) => {
 };
 
 const getAppFileName = () => {
-    const fileName = 'feebas-' + version;
+    const fileName = feebas['name'] + '-' + feebas['desktop_app-version'];
     if (platform === 'darwin') {
         return fileName + '-mac.7z';
     }
@@ -39,7 +36,7 @@ const exit = () => {
     process.exit(0);
 };
 
-const fileUrl = url + '/releases/download/v' + version + '/' + getAppFileName();
+const fileUrl = url + '/releases/download/v' + feebas['desktop_app-version'] + '/' + getAppFileName();
 const tmpPath = tempFile();
 const outPath = join(__dirname, '../app');
 
