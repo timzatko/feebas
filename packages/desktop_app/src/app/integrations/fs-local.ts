@@ -1,5 +1,5 @@
 import { forkJoin, from, of, throwError } from 'rxjs';
-import { map, } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { Integrations } from '../models/integrations';
 
@@ -17,10 +17,14 @@ const pull: Integrations.actions.pull.Function<Integrations.FsLocal.Interface> =
     return of({ path: fullPath });
 };
 
-const push: Integrations.actions.push.Function<Integrations.FsLocal.Interface> = ({ screenshots }) => {
+const push: Integrations.actions.push.Function<Integrations.FsLocal.Interface> = ({ integration, env, screenshots }) => {
     try {
         screenshots.forEach(screenshot => {
-            fs.copyFileSync(screenshot.path.current, screenshot.path.truth);
+            if (screenshot.path.current) {
+                const dst = path.join(env.cwd, integration.path, screenshot.key);
+                fs.ensureDirSync(path.dirname(dst));
+                fs.copyFileSync(screenshot.path.current, dst);
+            }
         });
     } catch (e) {
         console.log(e);

@@ -33,6 +33,7 @@ export class TreeComponent implements OnInit, OnDestroy {
 
     subscriptions: Subscription[] = [];
     sections: { [key: string]: boolean } = {};
+    bulkSelected = false;
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent) {
@@ -62,22 +63,22 @@ export class TreeComponent implements OnInit, OnDestroy {
     private buildTree() {
         const screenshots = this.projectService.filteredScreenshots;
 
-        const treeInsert = (tree: Tree, item: TreeItem, level: number) => {
-            const subKey = item.key
-                .split(path.sep)
-                .slice(0, level + 1)
-                .join(path.sep);
-
-            const parent = tree.find(_item => _item.key === subKey);
-
-            if (parent) {
+        const treeInsert = (tree: Tree, item: TreeItem, level: number = 0) => {
+            if (level + 1 < item.key.split(path.sep).length) {
+                const subKey = item.key
+                    .split(path.sep)
+                    .slice(0, level + 1)
+                    .join(path.sep);
+                const parent = tree.find(_item => _item.key === subKey);
                 const treeNode = parent as TreeNode;
                 if (!this.sections.hasOwnProperty(treeNode.key)) {
                     this.sections[treeNode.key] = false;
                 }
                 treeInsert(treeNode.children, item, level + 1);
             } else {
-                tree.push(item);
+                if (!tree.find(({ key }) => key === item.key)) {
+                    tree.push(item);
+                }
             }
         };
 
@@ -85,16 +86,14 @@ export class TreeComponent implements OnInit, OnDestroy {
             const pathArray = screenshot.key.split(path.sep);
 
             pathArray.forEach((value, index) => {
-                const n = index + 1;
-
-                if (pathArray.length === n) {
-                    treeInsert(tree, screenshot, 0);
+                if (pathArray.length === index + 1) {
+                    treeInsert(tree, screenshot);
                 } else {
-                    treeInsert(
-                        tree,
-                        { key: pathArray.slice(0, n).join(path.sep), status: Screenshots.Status.match, children: [] },
-                        0,
-                    );
+                    treeInsert(tree, {
+                        key: pathArray.slice(0, index + 1).join(path.sep),
+                        status: Screenshots.Status.match,
+                        children: [],
+                    });
                 }
             });
 
@@ -130,10 +129,20 @@ export class TreeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.projectService.filterChange.subscribe(() => this.setTree()));
+        this.subscriptions.push(
+            this.projectService.filterChange.subscribe(() => {
+                this.setTree();
+                // unselect screenshots which are hidden by active filters
+                this.projectService._selected.next(this.projectService.filteredScreenshots.reduce((obj, { key }) => {
+                    obj[key] = this.projectService.selected[key];
+                    return obj;
+                }, {}));
+            }),
+        );
         this.subscriptions.push(this.projectService._screenshots.asObservable().subscribe(() => this.setTree()));
-        this.subscriptions.push(this.projectService._selected.asObservable().subscribe(v => this.setCheckboxes(v)));
-        this.setTree();
+        this.subscriptions.push(
+            this.projectService._selected.asObservable().subscribe(selected => this.updateCheckboxes(selected)),
+        );
     }
 
     ngOnDestroy() {
@@ -178,10 +187,14 @@ export class TreeComponent implements OnInit, OnDestroy {
         return screenshot.status !== Screenshots.Status.match;
     }
 
-    setCheckboxes(selected: { [key: string]: boolean }) {
+    isBulkTreeCheckboxVisible() {
+        return this.projectService.filteredScreenshots.some(({ status }) => status !== Screenshots.Status.match);
+    }
+
+    updateCheckboxes(selected: { [key: string]: boolean }) {
         Object.keys(this.sections).forEach(sectionKey => {
             const isSectionSelected = Object.keys(selected)
-                .filter(screenshotKey => screenshotKey.startsWith(sectionKey))
+                .filter(screenshotKey => screenshotKey.startsWith(sectionKey + path.sep))
                 .some(screenshotKey => selected[screenshotKey]);
             this.sections[sectionKey] = isSectionSelected;
         });
@@ -191,8 +204,17 @@ export class TreeComponent implements OnInit, OnDestroy {
         this.projectService._selected.next(this.projectService.selected);
     }
 
-    onSelectSection(selected: boolean, node: TreeNode) {
-        const screenshots = this.projectService.screenshots.filter(({ key }) => key.startsWith(node.key));
+    onBulkSelect(value: boolean) {
+        this.projectService.selected = this.projectService.filteredScreenshots
+            .map(({ key }) => key)
+            .reduce((obj, key) => {
+                obj[key] = value;
+                return obj;
+            }, {});
+    }
+
+    onSectionSelect(selected: boolean, node: TreeNode) {
+        const screenshots = this.projectService.filteredScreenshots.filter(({ key }) => key.startsWith(node.key + path.sep));
         this.projectService.selected = screenshots
             .map(({ key }) => key)
             .reduce((obj, key) => {

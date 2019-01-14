@@ -15,6 +15,12 @@
         grid-template-columns: auto auto;
     }
 
+    .mat-tree-checkbox {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px;
+    }
+
     ul,
     li {
         margin-top: 0;

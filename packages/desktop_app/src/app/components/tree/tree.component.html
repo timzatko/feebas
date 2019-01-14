@@ -5,6 +5,13 @@
         </button>
         <button (click)="onFilterClick()" mat-flat-button color="primary">Filter (Ctrl + F)</button>
     </div>
+  <div class="mat-tree-checkbox">
+    <mat-checkbox
+      [disabled]="!isBulkTreeCheckboxVisible()"
+      [(ngModel)]="bulkSelected"
+      (ngModelChange)="onBulkSelect($event)"
+    ></mat-checkbox>
+  </div>
 
     <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl">
         <mat-tree-node *matTreeNodeDef="let screenshot">
@@ -38,7 +45,7 @@
                         <mat-checkbox
                             *ngIf="isCheckboxVisible(node)"
                             [(ngModel)]="sections[node.key]"
-                            (ngModelChange)="onSelectSection($event, node)"
+                            (ngModelChange)="onSectionSelect($event, node)"
                         ></mat-checkbox>
                     </div>
                 </div>

@@ -80,7 +80,7 @@ export class ProjectService {
 
     get filteredScreenshots() {
         const filter = this.filter.getRawValue();
-        return this.screenshots.filter(({ status }) => {
+        return (this.screenshots || []).filter(({ status }) => {
             return Object.keys(filter)
                 .filter(key => filter[key])
                 .some(key => status === Screenshots.Status[key]);
@@ -146,7 +146,7 @@ export class ProjectService {
 
     push() {
         const selected = this.selected;
-        const selectedScreenshots = this.screenshots.filter(({ key }) => selected[key]);
+        const selectedScreenshots = this.filteredScreenshots.filter(({ key }) => selected[key]);
 
         this.screenshots = null;
 
