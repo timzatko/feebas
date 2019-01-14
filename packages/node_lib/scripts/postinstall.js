@@ -20,9 +20,13 @@ const unzip = (filePath, cb) => {
 };
 
 const getAppFileName = () => {
-    const fileName = feebas['name'] + '-' + feebas['desktop_app-version'];
+    const fileName =  'feebas-desktop-app-' + feebas['desktop_app-version'];
     if (platform === 'darwin') {
         return fileName + '-mac.7z';
+    } else if (platform === 'linux') {
+        return fileName + '-x86_64.AppImage';
+    } else if (platform === 'win32') {
+        return fileName + '.exe';
     }
     // TODO:
     console.log(`feebas is not available for platform  ${platform}`);
@@ -55,21 +59,25 @@ request.get(fileUrl).on('response', res => {
         bar.increment(chunk.length);
     });
 
+    // download file into tmp file
     const outStream = res.pipe(fs.createWriteStream(tmpPath));
     outStream.on('finish', () => {
-        const appFileName = app.fileName[platform];
+        const outFile = join(outPath, app.platform[platform].appName);
+        // remove old executables
         fs.removeSync(outPath);
+        // and recreate executables folder
         fs.ensureDirSync(outPath);
 
         if (platform === 'darwin') {
+            // on OSX unzip 7z file and move .app file from it
             unzip(tmpPath, folderPath => {
-                fs.moveSync(join(folderPath, appFileName), join(outPath, appFileName));
+                fs.moveSync(join(folderPath, 'feebas.app'), outFile);
                 exit();
             });
-        } else if (platform === 'win32') {
-            // TODO:
         } else {
-            // TODO:
+            // just move downloaded file
+            fs.moveSync(tmpPath, outFile);
+            exit();
         }
     });
 });

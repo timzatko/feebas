@@ -1,5 +1,7 @@
 {
-    "productName": "feebas",
+    "appId": "com.electron.feebas",
+    "productName": "feebas-desktop-app",
+    "copyright": "Copyright © 2019 Exponea",
     "directories": {
         "output": "release/"
     },

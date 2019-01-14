@@ -9,7 +9,7 @@ const app = require('./app');
 const os = require('os');
 const cwd = process.cwd();
 const platform = os.platform();
-const appPath = path.join(__dirname, './app/', app.fileName[platform]);
+const appPath = path.join(__dirname, './app/', app.platform[platform].appName);
 
 const helpText = `
 	Usage
@@ -49,7 +49,7 @@ if (!fs.existsSync(configPath)) {
 }
 
 // RUN FEEBAS
-const subProcess = spawn(path.join(__dirname, 'scripts/run', `${platform}.sh`), [configPath, appPath], {
+const subProcess = spawn(path.join(__dirname, 'scripts/run', `${app.platform[platform].scriptName}`), [configPath, appPath], {
     detached: true,
     cwd: process.cwd(),
     env: process.env,
