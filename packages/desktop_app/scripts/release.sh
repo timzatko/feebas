@@ -1,3 +1,3 @@
 #! /bin/sh
 npm run build:prod
-npx electron-builder --mac --publish always
+npx electron-builder --mac --linux --win --publish always

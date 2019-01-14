@@ -31,7 +31,9 @@
     },
     "linux": {
         "icon": "dist",
+        "maintainer": "timzatko",
         "target": ["AppImage"],
+        "category": "Development",
         "publish": ["github"]
     },
     "publish": {
