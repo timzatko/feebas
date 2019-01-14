@@ -20,7 +20,7 @@ const unzip = (filePath, cb) => {
 };
 
 const getAppFileName = () => {
-    const fileName =  'feebas-desktop-app-' + feebas['desktop_app-version'];
+    const fileName =  feebas['desktop_app-fileName'] + '-' + feebas['desktop_app-version'];
     if (platform === 'darwin') {
         return fileName + '-mac.7z';
     } else if (platform === 'linux') {
@@ -71,7 +71,7 @@ request.get(fileUrl).on('response', res => {
         if (platform === 'darwin') {
             // on OSX unzip 7z file and move .app file from it
             unzip(tmpPath, folderPath => {
-                fs.moveSync(join(folderPath, 'feebas.app'), outFile);
+                fs.moveSync(join(folderPath, feebas['desktop_app-fileName']), outFile);
                 exit();
             });
         } else {
