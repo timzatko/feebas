@@ -1,11 +1,9 @@
 <div class="flex container v-center h-center">
     <h3 [ngSwitch]="appService.configStatus">
         <ng-container *ngSwitchCase="configStatusValues.CONFIG_FILE_NOT_DEFINED"
-            >Config file is not defined!</ng-container
-        >
+        >Configuration file not found! Path to configuration file have to be defined in the <b>FEEBAS_CONFIG</b> env variable!</ng-container>
         <ng-container *ngSwitchCase="configStatusValues.CONFIG_FILE_NOT_EXISTS"
-            >Config file does not exist!</ng-container
-        >
-        <ng-container *ngSwitchCase="configStatusValues.INCORRECT_JSON">Config JSON is invalid!</ng-container>
+            >Configuration file not found!</ng-container>
+        <ng-container *ngSwitchCase="configStatusValues.INCORRECT_JSON">Configuration JSON is invalid!</ng-container>
     </h3>
 </div>

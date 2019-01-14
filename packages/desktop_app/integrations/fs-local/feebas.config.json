@@ -6,11 +6,11 @@
             "screenshots": {
                 "current": {
                     "type": "fs-local",
-                    "path": "./integrations/fs-local/current"
+                    "path": "current"
                 },
                 "truth": {
                     "type": "fs-local",
-                    "path": "./integrations/fs-local/truth"
+                    "path": "truth"
                 }
             }
         }
