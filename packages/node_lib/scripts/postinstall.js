@@ -71,7 +71,8 @@ request.get(fileUrl).on('response', res => {
         if (platform === 'darwin') {
             // on OSX unzip 7z file and move .app file from it
             unzip(tmpPath, folderPath => {
-                fs.moveSync(join(folderPath, feebas['desktop_app-fileName']), outFile);
+                const osxFileName = feebas['desktop_app-fileName'] + '.app'; // feebas-desktop-app.app
+                fs.moveSync(join(folderPath, osxFileName), outFile);
                 exit();
             });
         } else {

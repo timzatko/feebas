@@ -3,7 +3,7 @@
     "description": "feebas",
     "main": "index.js",
     "author": "timzatko",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "desktop_app-version": "0.1.6",
     "desktop_app-fileName": "feebas-desktop-app",
     "repository": {
