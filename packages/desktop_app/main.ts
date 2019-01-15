@@ -68,6 +68,14 @@ try {
             createWindow();
         }
     });
+
+    // Define custom protocol handler. Deep linking works on packaged versions of the application!
+    app.setAsDefaultProtocolClient('feebas');
+
+    app.on('open-url', (event, fullUrl) => {
+        event.preventDefault();
+        win.webContents.send('open-url', fullUrl);
+    });
 } catch (e) {
     // Catch Error
     // throw e;

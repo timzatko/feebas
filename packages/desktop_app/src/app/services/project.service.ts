@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { AppService } from './app.service';
 import { LoaderService } from './loader.service';
-import { BehaviorSubject, forkJoin, Observable, throwError } from 'rxjs';
-import { flatMap, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, from, Observable, of, throwError } from 'rxjs';
+import { flatMap, map, take, tap } from 'rxjs/operators';
 import getImagesInDirectory from '../scripts/get-images-in-directory';
 import compareScreenshots from '../scripts/compare-screenshots';
 import { Screenshots } from '../models/screenshots';
@@ -11,9 +11,12 @@ import * as fs from 'fs';
 import { FormControl, FormGroup } from '@angular/forms';
 import integrations from '../integrations/integrations';
 import { StatusResult as GitStatus } from 'simple-git/typings/response';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ProjectService {
+    projectChange = new BehaviorSubject<{ projectId: string; commitId: string }>(null);
+
     currentProject: Project;
     vcs: {
         commitId: string;
@@ -44,10 +47,32 @@ export class ProjectService {
         );
     }
 
-    constructor(public appService: AppService, public loaderService: LoaderService) {
+    constructor(
+        public appService: AppService,
+        public loaderService: LoaderService,
+        public router: Router,
+        public ngZone: NgZone,
+    ) {
         if (this.appService.projects.length) {
             this.currentProject = this.appService.projects[0];
         }
+
+        this.appService.electronService.ipcRenderer.on('open-url', (_, url) => {
+            console.log('open-url - ' + url);
+            const [projectId, commitId] = url
+                .toString()
+                .split('//')[1]
+                .split(':');
+
+            this.currentProject = null;
+            this.ngZone.run(() =>
+                from(this.router.navigate(['home']))
+                    .pipe(take(1))
+                    .subscribe(() => {
+                        this.projectChange.next({ projectId, commitId });
+                    }),
+            );
+        });
     }
 
     get screenshots() {
@@ -87,6 +112,14 @@ export class ProjectService {
         });
     }
 
+    gitCheckout(commitId: string) {
+        return integrations.gitCheckout({
+            integration: this.currentProject.screenshots.truth,
+            env: this.appService.env,
+            commitId,
+        });
+    }
+
     getGitStatus() {
         return integrations.gitStatus({
             integration: this.currentProject.screenshots.truth,
@@ -94,13 +127,23 @@ export class ProjectService {
         });
     }
 
-    load() {
-        return this.getGitStatus().pipe(
-            flatMap(({ commitId, status }) => {
-                this.vcs = { commitId, status };
-                return this.getScreenshots(commitId);
-            }),
-        );
+    load(project: Project, _commitId: string) {
+        this.currentProject = project;
+        return this.getGitStatus()
+            .pipe(
+                flatMap(params => {
+                    if (params.commitId !== _commitId) {
+                        return this.gitCheckout(_commitId).pipe(map(() => params));
+                    }
+                    return of(params);
+                }),
+            )
+            .pipe(
+                flatMap(({ commitId, status }) => {
+                    this.vcs = { commitId, status };
+                    return this.getScreenshots(commitId);
+                }),
+            );
     }
 
     getScreenshots(commitId: string) {

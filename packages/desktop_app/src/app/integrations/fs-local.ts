@@ -17,7 +17,11 @@ const pull: Integrations.actions.pull.Function<Integrations.FsLocal.Interface> =
     return of({ path: fullPath });
 };
 
-const push: Integrations.actions.push.Function<Integrations.FsLocal.Interface> = ({ integration, env, screenshots }) => {
+const push: Integrations.actions.push.Function<Integrations.FsLocal.Interface> = ({
+    integration,
+    env,
+    screenshots,
+}) => {
     try {
         screenshots.forEach(screenshot => {
             if (screenshot.path.current) {
@@ -35,11 +39,6 @@ const push: Integrations.actions.push.Function<Integrations.FsLocal.Interface> =
 
 const gitStatus: Integrations.actions.gitStatus.Function<Integrations.FsLocal.Interface> = ({ integration, env }) => {
     const fullPath = path.join(env.cwd, integration.path);
-    if (!fs.pathExistsSync(fullPath)) {
-        return throwError(
-            new Error(`[fs-local] Screenshots directory "${fullPath}" does not exist! Check your configuration file.`),
-        );
-    }
     const git = simpleGit(fullPath);
 
     return forkJoin(from(git.revparse(['HEAD'])), from(git.status())).pipe(
@@ -49,10 +48,26 @@ const gitStatus: Integrations.actions.gitStatus.Function<Integrations.FsLocal.In
     );
 };
 
+const gitCheckout: Integrations.actions.gitCheckout.Function<Integrations.FsLocal.Interface> = ({
+    integration,
+    env,
+    commitId,
+}) => {
+    const fullPath = path.join(env.cwd, integration.path);
+    if (!fs.pathExistsSync(fullPath)) {
+        return throwError(
+            new Error(`[fs-local] Screenshots directory "${fullPath}" does not exist! Check your configuration file.`),
+        );
+    }
+    const git = simpleGit(fullPath);
+    return from(git.checkout(commitId));
+};
+
 const integrationResolver: Integrations.Resolver<Integrations.FsLocal.Interface> = {
     pull,
     push,
     gitStatus,
+    gitCheckout,
 };
 
 export default integrationResolver;

@@ -1,8 +1,8 @@
 import { Integrations } from '../models/integrations';
+import { of, throwError } from 'rxjs';
 
 import fsLocal from './fs-local';
 import gitlab from './gitlab';
-import { throwError } from 'rxjs';
 
 const integrations: { [key: string]: Integrations.Resolver } = {
     'fs-local': fsLocal,
@@ -21,12 +21,19 @@ const resolver: Integrations.Resolver = {
         }
         return integrations[params.integration.type].push(params);
     },
-    gitStatus(params: Integrations.actions.gitStatus.Params) {
-        if (typeof integrations[params.integration.type].gitStatus !== 'function') {
+    gitCheckout(params: Integrations.actions.gitCheckout.Params) {
+        if (typeof integrations[params.integration.type].gitCheckout !== 'function') {
             return throwError(
                 new Error(`Integration ${params.integration.type} cannot be used as truth screenshots directory!`),
             );
         }
+        // if commitId is not defined do not checkout
+        if (!params.commitId) {
+            return of(null);
+        }
+        return integrations[params.integration.type].gitCheckout(params);
+    },
+    gitStatus(params: Integrations.actions.gitStatus.Params) {
         return integrations[params.integration.type].gitStatus(params);
     },
 };

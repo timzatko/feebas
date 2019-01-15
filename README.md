@@ -4,6 +4,10 @@
 
 TODO:
 
+### opening specific project and commit
+
+`feebas://projectId:commitId` 
+
 ### integrations
 
 TODO:
@@ -26,7 +30,7 @@ TODO:
 
 ### app development
 - run `npm install && lerna bootstrap` [what is lerna?](https://github.com/lerna/lerna)
-- (optional) define path to configuration file in env variable `FEEBAS_CONFIG`  
+- (optional) define path to configuration file in env variable `FEEBAS_DEV_CONFIG` or use one of the preconfigured integrations 
 - run command `npm start` or `npm run app:start` or `npm run app:start:fs-local`
 
 ### app releasing

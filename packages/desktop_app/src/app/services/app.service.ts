@@ -11,7 +11,7 @@ export class AppService {
     env: App.Env = {};
     config: App.Config;
     configStatus: App.ConfigStatus;
-    argv: {[key: string]: string};
+    argv: { [key: string]: string };
 
     get isConfigFileOk() {
         return this.configStatus === App.ConfigStatus.OK;

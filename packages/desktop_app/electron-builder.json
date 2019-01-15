@@ -40,5 +40,9 @@
     },
     "publish": {
         "provider": "github"
+    },
+    "protocols": {
+        "name": "feebas",
+        "schemes": ["feebas"]
     }
 }

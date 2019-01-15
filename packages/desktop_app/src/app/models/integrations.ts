@@ -24,6 +24,15 @@ export namespace Integrations {
             export type Function<T> = (params: Params<T>) => Observable<{ screenshots: Screenshots.Screenshot[] }>;
         }
 
+        export namespace gitCheckout {
+            export interface Params<T = Integration> {
+                integration: T;
+                env: App.Env;
+                commitId: string;
+            }
+            export type Function<T> = (params: Params<T>) => Observable<void>;
+        }
+
         export namespace gitStatus {
             export interface Params<T = Integration> {
                 integration: T;
@@ -37,6 +46,7 @@ export namespace Integrations {
         pull: actions.pull.Function<T>;
         push?: actions.push.Function<T>;
         gitStatus?: actions.gitStatus.Function<T>;
+        gitCheckout?: actions.gitCheckout.Function<T>;
     }
 
     export type Integration = GitLab.Interface | FsLocal.Interface;
