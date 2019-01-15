@@ -15,5 +15,6 @@ export namespace App {
     export interface Env {
         variables?: { [key: string]: any };
         cwd?: string;
+        configPath?: string;
     }
 }

@@ -1,5 +1,6 @@
 import * as klawSync from 'klaw-sync';
 import * as path from 'path';
+import * as isImage from 'is-image';
 
 import { Screenshots } from '../models/screenshots';
 
@@ -11,8 +12,9 @@ const getImagesInDirectory = (fullPath: string, filter: Screenshots.Filter) => {
             const isIgnored = ['.gitkeep', '.gitignore', '.DS_Store'].some(
                 ignored => path.basename(item.path) === ignored,
             );
+
             if (!filter) {
-                return !isIgnored;
+                return !isIgnored && isImage(item.path);
             } else if (isIgnored) {
                 return false;
             }

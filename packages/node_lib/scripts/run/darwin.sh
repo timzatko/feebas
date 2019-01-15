@@ -1,2 +1,2 @@
 #! /bin/sh
-export FEEBAS_CONFIG=$1 && open $2
+open $2 --args --config=$1

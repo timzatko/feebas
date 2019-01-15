@@ -117,12 +117,6 @@ export class ProjectService {
                 commitId: commitId,
                 env: this.appService.env,
             }),
-            // of({
-            //     path:
-            //         '/var/folders/55/cprtpc9x4835bg4yj7mj0bww0000gn/T/.visual-testing/integrations/gitlab/commits/' +
-            //         this.commitId,
-            // }),
-            // of({ path: '/Users/timzatko/Documents/WORKSPACE/frontend/snapshot_testing/truth_screenshots' }),
         )
             .pipe(
                 flatMap(([current, truth]) => {

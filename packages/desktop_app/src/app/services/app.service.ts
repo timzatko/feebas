@@ -11,6 +11,7 @@ export class AppService {
     env: App.Env = {};
     config: App.Config;
     configStatus: App.ConfigStatus;
+    argv: {[key: string]: string};
 
     get isConfigFileOk() {
         return this.configStatus === App.ConfigStatus.OK;
@@ -22,26 +23,25 @@ export class AppService {
 
     constructor(public electronService: ElectronService) {
         this.env.variables = this.electronService.remote.process.env;
-
+        this.argv = minimist(this.electronService.remote.process.argv);
         this.configStatus = this.loadConfig();
     }
 
     private loadConfig() {
-        const configFile = this.env.variables.FEEBAS_CONFIG;
+        const configFile = this.argv['config'];
         if (!configFile) {
             return App.ConfigStatus.CONFIG_FILE_NOT_DEFINED;
         }
-
+        this.env.configPath = configFile;
         const cwd = this.electronService.remote.process.cwd();
-        const configFilePath = path.join(cwd, configFile);
 
-        if (!fs.existsSync(configFilePath)) {
+        if (!fs.existsSync(configFile)) {
             console.error(cwd);
             console.error(configFile);
             return App.ConfigStatus.CONFIG_FILE_NOT_EXISTS;
         }
 
-        const data = fs.readFileSync(configFilePath, { encoding: 'utf-8' });
+        const data = fs.readFileSync(configFile, { encoding: 'utf-8' });
         const config = JSON.parse(data);
 
         if (config === undefined) {
@@ -49,7 +49,7 @@ export class AppService {
         }
 
         this.config = config;
-        this.env.cwd = path.dirname(configFilePath); // set current working directory to config file location
+        this.env.cwd = path.dirname(configFile); // set current working directory to config file location
         return App.ConfigStatus.OK;
     }
 }

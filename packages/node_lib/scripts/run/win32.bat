@@ -1,2 +1,1 @@
-set FEEBAS_CONFIG=%1
-start %2
+start %2 %2 --config=%1
