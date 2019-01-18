@@ -9,7 +9,7 @@ serve = args.some(val => val === '--serve');
 
 const createWindow = () => {
     if (win) {
-        return;
+        return win;
     }
 
     const size = screen.getPrimaryDisplay().workAreaSize;
@@ -48,6 +48,8 @@ const createWindow = () => {
         // when you should delete the corresponding element.
         win = null;
     });
+
+    return win;
 };
 
 try {
@@ -68,9 +70,7 @@ try {
     app.on('activate', () => {
         // On OS X it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
-        if (!win) {
-            createWindow();
-        }
+        createWindow();
     });
 
     // Define custom protocol handler. Deep linking works on packaged versions of the application!
@@ -78,11 +78,7 @@ try {
 
     app.on('open-url', (event, fullUrl) => {
         event.preventDefault();
-
-        if (!win) {
-            createWindow();
-        }
-        win.webContents.send('open-url', fullUrl);
+        createWindow().webContents.send('open-url', fullUrl);
     });
 } catch (e) {
     // Catch Error

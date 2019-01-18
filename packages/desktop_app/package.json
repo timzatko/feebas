@@ -4,7 +4,7 @@
     "author": "timzatko",
     "main": "main.js",
     "private": true,
-    "version": "0.1.6",
+    "version": "0.1.8",
     "repository": {
         "type": "git",
         "url": "https://github.com/timzatko/feebas"
@@ -21,6 +21,7 @@
         "electron:serve-tsc": "tsc -p ./tsconfig-serve.json",
         "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && electron . --serve --config=$FEEBAS_DEV_CONFIG",
         "electron:local": "npm run build:prod && electron .",
+        "electron:build": "npm run build:prod && electron-builder build",
         "electron:linux": "npm run build:prod && electron-builder build --linux",
         "electron:windows": "npm run build:prod && electron-builder build --windows",
         "electron:mac": "npm run build:prod && electron-builder build --mac",

@@ -30,12 +30,13 @@ const cli = meow(helpText, {
     },
 });
 
-// CHECK FEEBAS APP, IF DOES NOT EXIST, INSTALL IT
+// check if feebas app is installed, if not, install it
 if (!fs.existsSync(appPath)) {
-    require(path.join(__dirname, 'scripts/postinstall.js'));
+    require(path.join(__dirname, 'scripts/install.js'));
 }
 
-// CHECK CONFIGURATION FILE
+// set configuration file from arguments
+// if arguments are not present look for feebas.config.json in current working directory
 let configPath = cli.flags.c || cli.flags.config;
 if (!configPath) {
     configPath = path.join(cwd, 'feebas.config.json');
@@ -48,7 +49,7 @@ if (!fs.existsSync(configPath)) {
     process.exit(1);
 }
 
-// RUN FEEBAS
+// run feebas app
 const subProcess = spawn(path.join(__dirname, 'scripts/run', `${app.platform[platform].scriptName}`), [configPath, appPath], {
     detached: true,
     cwd: process.cwd(),

@@ -5,6 +5,7 @@ import { App } from '../models/app';
 import * as minimist from 'minimist';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import getTempDir from '../scripts/get-temp-dir';
 
 @Injectable()
 export class AppService {
@@ -23,7 +24,7 @@ export class AppService {
 
     constructor(public electronService: ElectronService) {
         this.env.variables = this.electronService.remote.process.env;
-        this.argv = minimist(this.electronService.remote.process.argv);
+        this.argv = this.getArgv();
         this.configStatus = this.loadConfig();
     }
 
@@ -32,6 +33,7 @@ export class AppService {
         if (!configFile) {
             return App.ConfigStatus.CONFIG_FILE_NOT_DEFINED;
         }
+
         this.env.configPath = configFile;
         const cwd = this.electronService.remote.process.cwd();
 
@@ -51,5 +53,22 @@ export class AppService {
         this.config = config;
         this.env.cwd = path.dirname(configFile); // set current working directory to config file location
         return App.ConfigStatus.OK;
+    }
+
+    // when opening feebas via URL, cli.js from library is not called so the configuration file is not passed in the arguments
+    // save the arguments into the temp file
+    private getArgv() {
+        const argv = minimist(this.electronService.remote.process.argv);
+        const tempFile = path.join(getTempDir(), 'last-args.json');
+
+        if (!argv['config']) {
+            if (fs.existsSync(tempFile)) {
+                return JSON.parse(fs.readFileSync(tempFile, { encoding: 'utf8' }));
+            }
+            return argv;
+        }
+
+        fs.writeFileSync(tempFile, JSON.stringify(argv));
+        return argv;
     }
 }
