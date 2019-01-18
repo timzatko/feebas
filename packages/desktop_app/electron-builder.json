@@ -29,7 +29,11 @@
     "mac": {
         "icon": "dist",
         "target": ["7z"],
-        "publish": ["github"]
+        "publish": ["github"],
+        "extendInfo": {
+            "CFBundleURLName": ["feebas"],
+            "CFBundleURLSchemes": ["feebas"]
+        }
     },
     "linux": {
         "icon": "dist",

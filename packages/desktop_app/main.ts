@@ -7,7 +7,11 @@ let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
-function createWindow() {
+const createWindow = () => {
+    if (win) {
+        return;
+    }
+
     const size = screen.getPrimaryDisplay().workAreaSize;
 
     // Create the browser window.
@@ -44,7 +48,7 @@ function createWindow() {
         // when you should delete the corresponding element.
         win = null;
     });
-}
+};
 
 try {
     // This method will be called when Electron has finished
@@ -64,7 +68,7 @@ try {
     app.on('activate', () => {
         // On OS X it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
-        if (win === null) {
+        if (!win) {
             createWindow();
         }
     });
@@ -74,6 +78,10 @@ try {
 
     app.on('open-url', (event, fullUrl) => {
         event.preventDefault();
+
+        if (!win) {
+            createWindow();
+        }
         win.webContents.send('open-url', fullUrl);
     });
 } catch (e) {
