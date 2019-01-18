@@ -36,7 +36,7 @@ Now, when your pipeline fails because of visual regression.
 ## setup
 
 1. Install feebas ```npm install --save-dev feebas``` (you probably want it as a dev dependency)
-2. Create `feebas.config.json` in your project root, the file should look like this. Example file with gitlab integration is available [here](./docs/Configuration.md).
+2. Create `feebas.config.json` in your project root, the file should look like this. Alternatively you can provide path to configuration file - `npx feebas --config ./example/path/to/feebas.config.json`. Example file with gitlab integration is available [here](./docs/Configuration.md).
     ```json
     {
         "projects": [
