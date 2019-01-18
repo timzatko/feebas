@@ -1,9 +1,18 @@
 {
     "name": "feebas",
-    "description": "feebas",
+    "description": "Feebas is screenshot comparison tool which is intended to be used as a part of catching the visual regressions in end to end tests.",
     "main": "index.js",
     "author": "timzatko",
-    "version": "0.1.8",
+    "version": "0.1.9",
+    "license": "MIT",
+    "keywords": [
+        "screenshot",
+        "test",
+        "visual regression",
+        "e2e",
+        "ci",
+        "compare"
+    ],
     "desktop_app-version": "0.1.8",
     "desktop_app-fileName": "feebas-desktop-app",
     "repository": {
@@ -18,7 +27,8 @@
         "dev": "npm run app:build && node scripts/install.js --dev && npm run start --",
         "dev:fs-local": "npm run dev -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "app:build": "cd ../desktop_app && npm run electron:build",
-        "postinstall": "node ./scripts/install"
+        "postinstall": "node ./scripts/install",
+        "publish": "node ./scripts/publish"
     },
     "dependencies": {
         "cli-progress": "^2.1.1",

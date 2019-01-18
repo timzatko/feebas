@@ -1,5 +1,5 @@
 {
-    "name": "screenshot-comparison-tool",
+    "name": "feebas",
     "private": true,
     "scripts": {
         "start": "npm run app:start",
@@ -7,6 +7,7 @@
         "app:start:fs-local": "cd packages/desktop_app && npm run start:fs-local",
         "app:release": "cd packages/desktop_app && npm run app:release",
         "lib:publish": "cd packages/node_lib && npm publish",
+        "lib:start": "cd packages/node_lib && npm run dev",
         "lib:dev": "cd packages/node_lib && npm run dev",
         "lib:dev:fs-local": "cd packages/node_lib && npm run dev:fs-local"
     },
