@@ -28,7 +28,7 @@
         "dev:fs-local": "npm run dev -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "app:build": "cd ../desktop_app && npm run electron:build",
         "postinstall": "node ./scripts/install",
-        "publish": "node ./scripts/publish"
+        "prepublishOnly": "node ./scripts/pre-publish"
     },
     "dependencies": {
         "cli-progress": "^2.1.1",
@@ -37,5 +37,8 @@
         "node-7z-forall": "^1.0.0",
         "request": "^2.88.0",
         "tempfile": "^2.0.0"
+    },
+    "devDependencies": {
+        "ncp": "^2.0.0"
     }
 }
