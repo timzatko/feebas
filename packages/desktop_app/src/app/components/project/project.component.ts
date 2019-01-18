@@ -48,6 +48,7 @@ export class ProjectComponent implements OnInit {
         this.projectService.push().subscribe(
             () => {
                 this.loaderService.loading = false;
+                this.projectService._selected.next({});
                 this.snackBar.open('Success!', 'Close');
             },
             (error: Error) => {

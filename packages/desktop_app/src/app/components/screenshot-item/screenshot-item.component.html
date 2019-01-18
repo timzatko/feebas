@@ -6,6 +6,11 @@
             (ngModelChange)="onCheckboxChange()"
             *ngIf="isCheckboxVisible"
         ></mat-checkbox>
-        <div [ngClass]="getClass()" (click)="onLabelClick()" [title]="screenshot.key">{{ screenshot.key }}</div>
+        <div [ngClass]="getClass()" (click)="onLabelClick()">
+          <ng-container *ngIf="screenshot.gitStatus">
+            <span [title]="gitStatusTitle">[{{ gitStatusKey }}]&nbsp;</span>
+          </ng-container>
+          <span [title]="screenshot.key">{{ screenshot.key }}</span>
+        </div>
     </div>
 </div>

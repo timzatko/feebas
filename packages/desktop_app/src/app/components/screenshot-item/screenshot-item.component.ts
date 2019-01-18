@@ -15,7 +15,16 @@ export class ScreenshotItemComponent implements OnInit {
 
     constructor(public projectService: ProjectService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
+
+    get gitStatusTitle() {
+        return Screenshots.GitStatus[this.screenshot.gitStatus].toString() + ' (git)';
+    }
+
+    get gitStatusKey() {
+      return Screenshots.GitStatus[this.screenshot.gitStatus].toString().toUpperCase().charAt(0);
+    }
 
     get image() {
         const screenshot = this.screenshot.path.diff || this.screenshot.path.truth || this.screenshot.path.current;

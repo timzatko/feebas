@@ -6,6 +6,7 @@ import { Integrations } from '../models/integrations';
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as simpleGit from 'simple-git/promise';
+import * as gitRootDir from 'git-root-dir';
 
 const pull: Integrations.actions.pull.Function<Integrations.FsLocal.Interface> = ({ env, integration }) => {
     const fullPath = path.join(env.cwd, integration.path);
@@ -41,9 +42,17 @@ const gitStatus: Integrations.actions.gitStatus.Function<Integrations.FsLocal.In
     const fullPath = path.join(env.cwd, integration.path);
     const git = simpleGit(fullPath);
 
-    return forkJoin(from(git.revparse(['HEAD'])), from(git.status())).pipe(
-        map(([commitId, status]) => {
-            return { status, commitId: commitId.trim() };
+    return forkJoin(from(git.revparse(['HEAD'])), from(git.status()), from(gitRootDir(integration.path))).pipe(
+        map(([commitId, status, rootDir]) => {
+            const screenshotsDirectoryAbsolute = path.join(path.dirname(env.configPath), integration.path);
+            const relative = path.relative(rootDir, screenshotsDirectoryAbsolute);
+
+            // change paths in git from relative to git root, to relative to integration screenshot directory
+            ['modified', 'not_added', 'renamed', 'staged'].forEach((key) => {
+                status[key] = status[key].map((_path) => path.relative(relative, _path));
+            });
+
+            return { status, commitId: commitId.trim(), rootDir };
         }),
     );
 };

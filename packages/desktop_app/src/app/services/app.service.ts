@@ -29,13 +29,13 @@ export class AppService {
     }
 
     private loadConfig() {
-        const configFile = this.argv['config'];
+        const cwd = this.electronService.remote.process.cwd();
+        const configFile = path.join(cwd, this.argv['config']);
         if (!configFile) {
             return App.ConfigStatus.CONFIG_FILE_NOT_DEFINED;
         }
 
         this.env.configPath = configFile;
-        const cwd = this.electronService.remote.process.cwd();
 
         if (!fs.existsSync(configFile)) {
             console.error(cwd);

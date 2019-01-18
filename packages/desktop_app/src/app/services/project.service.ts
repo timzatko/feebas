@@ -12,16 +12,15 @@ import { FormControl, FormGroup } from '@angular/forms';
 import integrations from '../integrations/integrations';
 import { StatusResult as GitStatus } from 'simple-git/typings/response';
 import { Router } from '@angular/router';
+import { Integrations } from '../models/integrations';
+import * as path from 'path';
 
 @Injectable()
 export class ProjectService {
     projectChange = new BehaviorSubject<{ projectId: string; commitId: string }>(null);
 
     currentProject: Project;
-    vcs: {
-        commitId: string;
-        status: GitStatus;
-    } = { commitId: null, status: null };
+    vcs: Integrations.actions.gitStatus.Interface = { commitId: null, status: null, rootDir: null };
 
     paths: { truth: string; current: string };
 
@@ -45,6 +44,19 @@ export class ProjectService {
             { path: this.paths.current, screenshots: screenshots.current },
             { path: this.paths.truth, screenshots: screenshots.truth },
         );
+    }
+
+    private _updateGitStatusOnScreenshots(screenshots: Screenshots.Screenshot[]) {
+        return screenshots.map(screenshot => {
+            const screenshotGitStatus = ['modified', 'not_added', 'renamed', 'staged'].find(key => {
+                return this.vcs.status[key].indexOf(screenshot.key) !== -1;
+            });
+
+            return {
+                ...screenshot,
+                gitStatus: screenshotGitStatus ? Screenshots.GitStatus[screenshotGitStatus] : null,
+            };
+        });
     }
 
     constructor(
@@ -139,9 +151,9 @@ export class ProjectService {
                 }),
             )
             .pipe(
-                flatMap(({ commitId, status }) => {
-                    this.vcs = { commitId, status };
-                    return this.getScreenshots(commitId);
+                flatMap(vcs => {
+                    this.vcs = vcs;
+                    return this.getScreenshots(vcs.commitId);
                 }),
             );
     }
@@ -171,7 +183,7 @@ export class ProjectService {
             )
             .pipe(
                 tap(screenshots => {
-                    this.screenshots = screenshots;
+                    this.screenshots = this._updateGitStatusOnScreenshots(screenshots);
 
                     // if the test is success don't filter out success screenshots
                     if (this.status === Screenshots.Status.match) {
@@ -208,7 +220,7 @@ export class ProjectService {
             )
             .pipe(
                 tap(screenshots => {
-                    this._screenshots.next(screenshots);
+                    this._screenshots.next(this._updateGitStatusOnScreenshots(screenshots));
                 }),
             );
     }

@@ -8,6 +8,7 @@ import { PNG } from 'pngjs';
 import * as pixelmatch from 'pixelmatch';
 import * as fs from 'fs';
 import * as path from 'path';
+import GitStatus = Screenshots.GitStatus;
 
 const asPNG = () => new PNG();
 
@@ -26,6 +27,7 @@ const compareScreenshots = (
                 key: currentRelativePath,
                 path: { current: currentAbsolutePath },
                 status: Screenshots.Status.truth_does_not_exist,
+                gitStatus: GitStatus.not_changed
             });
         }
 
@@ -81,6 +83,7 @@ const compareScreenshots = (
                                     diff: diffFile,
                                 },
                                 status: Screenshots.Status.do_not_match,
+                                gitStatus: GitStatus.not_changed
                             });
                             observer.complete();
                         });
@@ -94,6 +97,7 @@ const compareScreenshots = (
                         truth: truthAbsolutePath,
                     },
                     status: Screenshots.Status.match,
+                    gitStatus: GitStatus.not_changed
                 });
             }),
         );
@@ -112,6 +116,7 @@ const compareScreenshots = (
                         key: truthRelativePath,
                         path: { truth: path.join(truth.path, truthRelativePath) },
                         status: Screenshots.Status.truth_was_not_tested,
+                        gitStatus: GitStatus.not_changed
                     };
                 }
             });

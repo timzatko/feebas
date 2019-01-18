@@ -38,7 +38,12 @@ export namespace Integrations {
                 integration: T;
                 env: App.Env;
             }
-            export type Function<T> = (params: Params<T>) => Observable<{ commitId: string; status: StatusResult }>;
+            export interface Interface {
+                commitId: string;
+                status: StatusResult;
+                rootDir: string;
+            }
+            export type Function<T> = (params: Params<T>) => Observable<Interface>;
         }
     }
 
