@@ -1,75 +1,84 @@
 @import './../../../styles/colors';
 
 :host {
-    padding-top: 24px;
     display: block;
+    height: 100%;
 }
 
 .mat-tree-container {
     height: 100%;
     overflow-y: scroll;
 
-    .mat-tree-actions {
-        display: grid;
-        grid-gap: 8px;
-        grid-template-columns: auto auto;
-    }
+    .mat-tree-header {
+        padding-top: 24px;
 
-    .mat-tree-checkbox {
-      display: flex;
-      justify-content: flex-end;
-      padding: 10px 20px;
-    }
-
-    ul,
-    li {
-        margin-top: 0;
-        margin-bottom: 0;
-        list-style-type: none;
-    }
-
-    .mat-tree-node,
-    .mat-nested-tree-node {
-        cursor: pointer;
-        overflow: visible;
-
-        .hidden {
-            display: none;
-        }
-    }
-
-    .mat-tree-node > li,
-    .mat-nested-tree-node > li > div {
-        width: 100%;
-        overflow: visible;
-
-        &.mat-tree-node-success {
-            color: $success;
+        .mat-tree-actions {
+            display: grid;
+            grid-gap: 8px;
+            grid-template-columns: auto auto;
         }
 
-        &.mat-tree-node-warning {
-            color: $warning;
-        }
-
-        &.mat-tree-node-error {
-            color: $error;
-        }
-
-        > div {
+        .mat-tree-checkbox {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
+            justify-content: flex-end;
+            padding: 10px 20px;
+        }
+    }
 
-            > div,
-            .mat-tree-node {
-                display: flex;
-                align-items: center;
+    .mat-tree-content {
+        height: calc(100% - 100px);
+        overflow: scroll;
+
+        ul,
+        li {
+            margin-top: 0;
+            margin-bottom: 0;
+            list-style-type: none;
+        }
+
+        .mat-tree-node,
+        .mat-nested-tree-node {
+            cursor: pointer;
+            overflow: visible;
+
+            .hidden {
+                display: none;
+            }
+        }
+
+        .mat-tree-node > li,
+        .mat-nested-tree-node > li > div {
+            width: 100%;
+            overflow: visible;
+
+            &.mat-tree-node-success {
+                color: $success;
             }
 
-            > .mat-checkbox {
-                padding-right: 20px;
+            &.mat-tree-node-warning {
+                color: $warning;
+            }
+
+            &.mat-tree-node-error {
+                color: $error;
+            }
+
+            > div {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+
+                > div,
+                .mat-tree-node {
+                    display: flex;
+                    align-items: center;
+                }
+
+                > .mat-checkbox {
+                    padding-right: 20px;
+                }
             }
         }
     }

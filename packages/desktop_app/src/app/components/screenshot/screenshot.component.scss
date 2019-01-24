@@ -19,8 +19,12 @@
     background: white;
     align-items: center;
     flex-wrap: wrap;
+    z-index: 100;
 
     h1 {
         margin-bottom: 0;
+        display: inline-block;
+        word-break: break-all;
+        flex: 1;
     }
 }
