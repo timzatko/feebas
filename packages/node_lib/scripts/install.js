@@ -98,7 +98,9 @@ const onSuccess = () => {
 };
 
 const onError = error => {
-    console.log(error.message);
+    const errorMessage = error.message || error;
+    console.log('\n');
+    console.log(errorMessage);
     process.exit(0);
 };
 
