@@ -30,7 +30,8 @@ export class AppService {
 
     private loadConfig() {
         const cwd = this.electronService.remote.process.cwd();
-        const configFile = path.join(cwd, this.argv['config']);
+        const argvConfigFile = this.argv['config'];
+        const configFile = path.isAbsolute(argvConfigFile) ? argvConfigFile : path.join(cwd, argvConfigFile);
         if (!configFile) {
             return App.ConfigStatus.CONFIG_FILE_NOT_DEFINED;
         }
