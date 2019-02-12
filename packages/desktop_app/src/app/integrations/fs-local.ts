@@ -41,15 +41,25 @@ const push: Integrations.actions.push.Function<Integrations.FsLocal.Interface> =
 const gitStatus: Integrations.actions.gitStatus.Function<Integrations.FsLocal.Interface> = ({ integration, env }) => {
     const fullPath = path.join(env.cwd, integration.path);
     const git = simpleGit(fullPath);
+    const screenshotsDirectoryAbsolute = path.join(path.dirname(env.configPath), integration.path);
 
-    return forkJoin(from(git.revparse(['HEAD'])), from(git.status()), from(gitRootDir(integration.path))).pipe(
+    return forkJoin(
+        from(git.revparse(['HEAD'])),
+        from(git.status()),
+        from(gitRootDir(screenshotsDirectoryAbsolute)),
+    ).pipe(
         map(([commitId, status, rootDir]) => {
-            const screenshotsDirectoryAbsolute = path.join(path.dirname(env.configPath), integration.path);
+            if (!rootDir) {
+                throw new Error(`Cannot find git root directory for ${screenshotsDirectoryAbsolute}!`);
+            }
+
             const relative = path.relative(rootDir, screenshotsDirectoryAbsolute);
 
             // change paths in git from relative to git root, to relative to integration screenshot directory
-            ['modified', 'not_added', 'renamed', 'staged'].forEach((key) => {
-                status[key] = status[key].map((_path) => path.relative(relative, _path));
+            ['modified', 'not_added', 'renamed', 'staged'].forEach(key => {
+                status[key] = status[key].map(_path => {
+                    return path.relative(relative, _path);
+                });
             });
 
             return { status, commitId: commitId.trim(), rootDir };
