@@ -20,11 +20,11 @@ export class ScreenshotItemComponent implements OnInit {
     }
 
     get gitStatusTitle() {
-        return Screenshots.GitStatus[this.screenshot.gitStatus].toString() + ' (git)';
+        return this.screenshot.gitStatus + ' (git)';
     }
 
     get gitStatusKey() {
-      return Screenshots.GitStatus[this.screenshot.gitStatus].toString().toUpperCase().charAt(0);
+      return this.screenshot.gitStatus.toString().toUpperCase().charAt(0);
     }
 
     get image() {
@@ -37,7 +37,7 @@ export class ScreenshotItemComponent implements OnInit {
     }
 
     onLabelClick() {
-        this.projectService._selected[this.screenshot.key] = !this.projectService._selected[this.screenshot.key];
+        this.projectService._selected.value[this.screenshot.key] = !this.projectService._selected.value[this.screenshot.key];
         this.onCheckboxChange();
     }
 

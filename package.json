@@ -5,6 +5,7 @@
         "start": "npm run app:start:fs-local",
         "app:start": "cd packages/desktop_app && npm run start",
         "app:start:fs-local": "cd packages/desktop_app && npm run start:fs-local",
+        "app:start:fs-local-2": "cd packages/desktop_app && npm run start:fs-local-2",
         "app:release": "cd packages/desktop_app && npm run app:release",
         "lib:publish": "cd packages/node_lib && npm publish",
         "lib:start": "cd packages/node_lib && npm run dev",

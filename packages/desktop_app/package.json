@@ -14,6 +14,7 @@
         "ng": "ng",
         "start": "npm run postinstall && npm-run-all -p ng:serve electron:serve",
         "start:fs-local": "cross-env FEEBAS_DEV_CONFIG=./integrations/fs-local/feebas.config.json npm run start",
+        "start:fs-local-2": "cross-env FEEBAS_DEV_CONFIG=./integrations/fs-local-2/feebas.config.json npm run start",
         "build": "sh ./scripts/build.sh",
         "build:dev": "npm run build -- -c dev",
         "build:prod": "npm run build -- -c production",
