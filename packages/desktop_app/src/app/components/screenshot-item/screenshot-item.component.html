@@ -1,16 +1,18 @@
-<div class="item">
-    <div class="image" (click)="onScreenshotClick()"><img [src]="image" /></div>
-    <div class="bottom">
-        <mat-checkbox
-            [(ngModel)]="projectService._selected.value[screenshot.key]"
-            (ngModelChange)="onCheckboxChange()"
-            *ngIf="isCheckboxVisible"
-        ></mat-checkbox>
-        <div [ngClass]="getClass()" (click)="onLabelClick()">
-          <ng-container *ngIf="screenshot.gitStatus">
-            <span [title]="gitStatusTitle">[{{ gitStatusKey }}]&nbsp;</span>
-          </ng-container>
-          <span [title]="screenshot.key">{{ screenshot.key }}</span>
+<div class="item" [class.highlight]="highlight">
+    <div>
+        <div class="image" (click)="onScreenshotClick()"><img [src]="image" /></div>
+        <div class="bottom">
+            <mat-checkbox
+                [(ngModel)]="projectService._selected.value[screenshot.key]"
+                (ngModelChange)="onCheckboxChange()"
+                *ngIf="isCheckboxVisible"
+            ></mat-checkbox>
+            <div [ngClass]="getClass()" (click)="onLabelClick()">
+                <ng-container *ngIf="screenshot.gitStatus">
+                    <span [title]="gitStatusTitle">[{{ gitStatusKey }}]&nbsp;</span>
+                </ng-container>
+                <span [title]="screenshot.key">{{ screenshot.key }}</span>
+            </div>
         </div>
     </div>
 </div>

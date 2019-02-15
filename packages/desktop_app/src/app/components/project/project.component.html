@@ -12,16 +12,19 @@
     <div class="project-container">
         <div><app-tree (screenshotOpen)="onOpenScreenshot($event)"></app-tree></div>
         <div>
-            <ng-container *ngIf="currentScreenshot; else default">
-                <app-screenshot [screenshot]="currentScreenshot" (back)="onCloseScreenshot()"></app-screenshot>
+            <ng-container *ngIf="currentScreenshot && isPreview">
+                <div>
+                    <app-screenshot [screenshot]="currentScreenshot" (back)="onCloseScreenshot()"></app-screenshot>
+                </div>
             </ng-container>
-            <ng-template #default>
+            <div>
                 <ng-container *ngIf="projectService.filteredScreenshots.length > 0; else noScreenshots">
                     <div class="screenshots">
                         <app-screenshot-item
                             *ngFor="let screenshot of projectService.filteredScreenshots"
                             (open)="onOpenScreenshot($event)"
                             [screenshot]="screenshot"
+                            [highlight]="isHighlighted(screenshot)"
                         ></app-screenshot-item>
                     </div>
                 </ng-container>
@@ -42,7 +45,7 @@
                         </p>
                     </div>
                 </ng-template>
-            </ng-template>
+            </div>
         </div>
     </div>
 </ng-container>

@@ -2,7 +2,7 @@
     "name": "feebas",
     "private": true,
     "scripts": {
-        "start": "npm run app:start",
+        "start": "npm run app:start:fs-local",
         "app:start": "cd packages/desktop_app && npm run start",
         "app:start:fs-local": "cd packages/desktop_app && npm run start:fs-local",
         "app:release": "cd packages/desktop_app && npm run app:release",

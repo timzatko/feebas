@@ -10,6 +10,7 @@ import { getScreenshotClass } from '../../scripts/screenshot';
 })
 export class ScreenshotItemComponent implements OnInit {
     @Input() screenshot: Screenshots.Screenshot;
+    @Input() highlight = false;
 
     @Output() open = new EventEmitter<Screenshots.Screenshot>();
 

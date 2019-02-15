@@ -1,33 +1,43 @@
 .item {
-    grid-template-rows: 1fr 20px;
+    padding: 4px;
     height: 100%;
-    display: grid;
+    box-sizing: border-box;
 
-    .image {
-        cursor: pointer;
-
-        img {
-            max-width: 100%;
-        }
+    &.highlight {
+        background: rgba(128, 128, 128, 0.2);
     }
 
-    .bottom {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-gap: 8px;
-        align-self: center;
+    > div {
+        grid-template-rows: 1fr 20px;
         height: 100%;
+        display: grid;
 
-        .mat-checkbox {
-            display: flex;
-            justify-content: center;
+        .image {
+            cursor: pointer;
+
+            img {
+                max-width: 100%;
+            }
         }
 
-        .caption {
-            text-overflow: ellipsis;
-            max-width: 100%;
-            overflow: hidden;
-            cursor: pointer;
+        .bottom {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 8px;
+            align-self: center;
+            height: 100%;
+
+            .mat-checkbox {
+                display: flex;
+                justify-content: center;
+            }
+
+            .caption {
+                text-overflow: ellipsis;
+                max-width: 100%;
+                overflow: hidden;
+                cursor: pointer;
+            }
         }
     }
 }

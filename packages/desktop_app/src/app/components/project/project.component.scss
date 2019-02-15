@@ -10,21 +10,28 @@
 
     > div {
         flex: 1;
-        padding: 0 12px;
 
         &:nth-child(1) {
             flex: 0 0 320px;
+            padding: 0 12px;
         }
 
         &:nth-child(2) {
-            overflow-y: scroll;
+            overflow-y: hidden;
+            padding-left: 12px;
 
-            .screenshots {
-                padding-top: 24px;
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(calc(33% - 12px), 1fr));
-                column-gap: 12px;
-                row-gap: 12px;
+            > div {
+                padding-right: 12px;
+                overflow-y: scroll;
+                height: 100%;
+
+                .screenshots {
+                    padding-top: 24px;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(calc(33% - 12px), 1fr));
+                    column-gap: 12px;
+                    row-gap: 12px;
+                }
             }
         }
     }
