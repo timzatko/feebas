@@ -1,4 +1,17 @@
-import { Component, EventEmitter, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    ViewChildren,
+} from '@angular/core';
 import { Screenshots } from '../../models/screenshots';
 import { MatDialog, MatTreeNestedDataSource } from '@angular/material';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -23,10 +36,15 @@ export type Tree = TreeItem[];
     templateUrl: './tree.component.html',
     styleUrls: ['./tree.component.scss'],
 })
-export class TreeComponent implements OnInit, OnDestroy {
+export class TreeComponent implements OnInit, OnDestroy, OnChanges {
     nestedTreeControl: NestedTreeControl<TreeItem>;
     nestedDataSource: MatTreeNestedDataSource<TreeItem>;
     isExpanded = false;
+
+    @ViewChildren('treeNode') screenshots: QueryList<ElementRef>;
+
+    @Input()
+    currentScreenshot: Screenshots.Screenshot;
 
     @Output()
     screenshotOpen = new EventEmitter<Screenshots.Screenshot>();
@@ -133,16 +151,30 @@ export class TreeComponent implements OnInit, OnDestroy {
             this.projectService.filterChange.subscribe(() => {
                 this.setTree();
                 // unselect screenshots which are hidden by active filters
-                this.projectService._selected.next(this.projectService.filteredScreenshots.reduce((obj, { key }) => {
-                    obj[key] = this.projectService.selected[key];
-                    return obj;
-                }, {}));
+                this.projectService._selected.next(
+                    this.projectService.filteredScreenshots.reduce((obj, { key }) => {
+                        obj[key] = this.projectService.selected[key];
+                        return obj;
+                    }, {}),
+                );
             }),
         );
         this.subscriptions.push(this.projectService._screenshots.asObservable().subscribe(() => this.setTree()));
         this.subscriptions.push(
             this.projectService._selected.asObservable().subscribe(selected => this.updateCheckboxes(selected)),
         );
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        const currentScreenshot = changes.currentScreenshot.currentValue;
+        if (currentScreenshot) {
+            const screenshot = this.screenshots.find(
+                item => item.nativeElement.getAttribute('data-key') === currentScreenshot.key,
+            );
+            if (screenshot) {
+                screenshot.nativeElement.scrollIntoView();
+            }
+        }
     }
 
     ngOnDestroy() {
@@ -214,13 +246,19 @@ export class TreeComponent implements OnInit, OnDestroy {
     }
 
     onSectionSelect(selected: boolean, node: TreeNode) {
-        const screenshots = this.projectService.filteredScreenshots.filter(({ key }) => key.startsWith(node.key + path.sep));
+        const screenshots = this.projectService.filteredScreenshots.filter(({ key }) =>
+            key.startsWith(node.key + path.sep),
+        );
         this.projectService.selected = screenshots
             .map(({ key }) => key)
             .reduce((obj, key) => {
                 obj[key] = selected;
                 return obj;
             }, {});
+    }
+
+    isHighlighted(screenshot: Screenshots.Screenshot) {
+        return this.currentScreenshot && screenshot.key === this.currentScreenshot.key;
     }
 
     private _getChildren(item: TreeNode) {

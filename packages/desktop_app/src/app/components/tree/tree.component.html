@@ -17,11 +17,15 @@
     <div class="mat-tree-content">
         <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl">
             <mat-tree-node *matTreeNodeDef="let screenshot">
-                <li [ngClass]="getItemClass(screenshot)">
+                <li [ngClass]="getItemClass(screenshot)" [attr.data-key]="screenshot.key" #treeNode>
                     <div>
                         <div (click)="onShowScreenshot(screenshot)">
                             <button mat-icon-button disabled></button>
-                            <span (click)="onShowScreenshot(screenshot)">{{ getItemName(screenshot) }}</span>
+                            <span
+                                [class.highlight]="isHighlighted(screenshot)"
+                                (click)="onShowScreenshot(screenshot)"
+                                >{{ getItemName(screenshot) }}</span
+                            >
                         </div>
                         <mat-checkbox
                             *ngIf="isCheckboxVisible(screenshot)"

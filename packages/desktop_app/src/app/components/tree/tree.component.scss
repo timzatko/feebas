@@ -76,6 +76,13 @@
                     align-items: center;
                 }
 
+                > div > span {
+                    &.highlight {
+                        font-weight: bold;
+                        text-decoration: underline;
+                    }
+                }
+
                 > .mat-checkbox {
                     padding-right: 20px;
                 }
