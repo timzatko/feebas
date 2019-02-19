@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Screenshots } from '../../models/screenshots';
 import { ProjectService } from '../../services/project.service';
 import { getScreenshotClass } from '../../scripts/screenshot';
@@ -14,7 +14,7 @@ export class ScreenshotItemComponent implements OnInit {
 
     @Output() open = new EventEmitter<Screenshots.Screenshot>();
 
-    constructor(public projectService: ProjectService) {}
+    constructor(public projectService: ProjectService, public elementRef: ElementRef) {}
 
     ngOnInit() {
     }
@@ -47,6 +47,10 @@ export class ScreenshotItemComponent implements OnInit {
 
     onCheckboxChange() {
         this.projectService._selected.next(this.projectService.selected);
+    }
+
+    scrollIntoView() {
+      this.elementRef.nativeElement.scrollIntoView();
     }
 
     get isCheckboxVisible() {

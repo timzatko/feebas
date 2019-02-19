@@ -1,9 +1,10 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Router } from '@angular/router';
 import { Screenshots } from '../../models/screenshots';
 import { MatSnackBar } from '@angular/material';
 import { LoaderService } from '../../services/loader.service';
+import { ScreenshotItemComponent } from '../screenshot-item/screenshot-item.component';
 
 @Component({
     selector: 'app-project',
@@ -13,6 +14,8 @@ import { LoaderService } from '../../services/loader.service';
 export class ProjectComponent implements OnInit {
     currentScreenshot: Screenshots.Screenshot;
     isPreview = false;
+
+    @ViewChildren(ScreenshotItemComponent) screenshotItems: QueryList<ScreenshotItemComponent>;
 
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent) {
@@ -57,6 +60,15 @@ export class ProjectComponent implements OnInit {
                     this.currentScreenshot = screenshots[currentIndex - 1];
                 }
             }
+
+            if (this.currentScreenshot) {
+                const screenshotItem = this.screenshotItems.find(
+                    item => item.screenshot.key === this.currentScreenshot.key,
+                );
+                if (screenshotItem) {
+                    screenshotItem.scrollIntoView();
+                }
+            }
         } else if (event.code === 'Backspace') {
             this.onCloseScreenshot();
         } else if (event.code === 'Enter') {
@@ -94,6 +106,10 @@ export class ProjectComponent implements OnInit {
 
     get selectedCount() {
         return Object.values(this.projectService.selected).filter(selected => selected).length;
+    }
+
+    get screenshots() {
+        return this.projectService.filteredScreenshots;
     }
 
     onApproveClick() {
