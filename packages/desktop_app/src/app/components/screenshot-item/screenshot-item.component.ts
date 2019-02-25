@@ -50,7 +50,7 @@ export class ScreenshotItemComponent implements OnInit {
     }
 
     scrollIntoView() {
-      this.elementRef.nativeElement.scrollIntoView();
+      this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' });
     }
 
     get isCheckboxVisible() {

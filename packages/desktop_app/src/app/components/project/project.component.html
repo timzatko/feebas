@@ -10,16 +10,14 @@
         </div>
     </mat-toolbar>
     <div class="project-container">
-        <div>
+        <div class="tree">
             <app-tree (screenshotOpen)="onOpenScreenshot($event)" [currentScreenshot]="currentScreenshot"></app-tree>
         </div>
-        <div>
-            <ng-container *ngIf="currentScreenshot && isPreview">
-                <div>
-                    <app-screenshot [screenshot]="currentScreenshot" (back)="onCloseScreenshot()"></app-screenshot>
-                </div>
+        <div class="content">
+            <ng-container *ngIf="isPreview; else noPreview">
+                <app-screenshot [screenshot]="currentScreenshot" (back)="onCloseScreenshot()"></app-screenshot>
             </ng-container>
-            <div>
+            <ng-template #noPreview>
                 <ng-container *ngIf="projectService.filteredScreenshots.length > 0; else noScreenshots">
                     <div class="screenshots">
                         <app-screenshot-item
@@ -47,7 +45,7 @@
                         </p>
                     </div>
                 </ng-template>
-            </div>
+            </ng-template>
         </div>
     </div>
 </ng-container>

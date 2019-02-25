@@ -173,7 +173,7 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
                 item => item.nativeElement.getAttribute('data-key') === currentScreenshot.key,
             );
             if (screenshot) {
-                screenshot.nativeElement.scrollIntoView();
+                screenshot.nativeElement.scrollIntoView({ block: 'center', inline: 'start' });
             }
         }
     }

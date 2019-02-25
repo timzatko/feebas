@@ -8,31 +8,22 @@
         height: calc(100vh - 64px);
     }
 
-    > div {
-        flex: 1;
-
-        &:nth-child(1) {
+        > .tree {
             flex: 0 0 320px;
             padding: 0 12px;
         }
 
-        &:nth-child(2) {
-            overflow-y: hidden;
-            padding-left: 12px;
+        > .content {
+            padding-right: 12px;
+            overflow-y: scroll;
+            height: 100%;
 
-            > div {
-                padding-right: 12px;
-                overflow-y: scroll;
-                height: 100%;
-
-                .screenshots {
-                    padding-top: 24px;
-                    display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(calc(33% - 12px), 1fr));
-                    column-gap: 12px;
-                    row-gap: 12px;
-                }
+            .screenshots {
+                padding-top: 24px;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(calc(33% - 12px), 1fr));
+                column-gap: 12px;
+                row-gap: 12px;
             }
         }
     }
-}

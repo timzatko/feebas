@@ -61,14 +61,7 @@ export class ProjectComponent implements OnInit {
                 }
             }
 
-            if (this.currentScreenshot) {
-                const screenshotItem = this.screenshotItems.find(
-                    item => item.screenshot.key === this.currentScreenshot.key,
-                );
-                if (screenshotItem) {
-                    screenshotItem.scrollIntoView();
-                }
-            }
+            this.scrollIntoCurrentScreenshot();
         } else if (event.code === 'Backspace') {
             this.onCloseScreenshot();
         } else if (event.code === 'Enter') {
@@ -85,6 +78,19 @@ export class ProjectComponent implements OnInit {
         public loaderService: LoaderService,
     ) {}
 
+    scrollIntoCurrentScreenshot() {
+        if (this.currentScreenshot) {
+            const screenshotItem = this.screenshotItems.find(
+                item => item.screenshot.key === this.currentScreenshot.key,
+            );
+            if (screenshotItem) {
+                setTimeout(() => {
+                    screenshotItem.scrollIntoView();
+                });
+            }
+        }
+    }
+
     ngOnInit() {
         if (this.projectService.screenshots === null) {
             this.router.navigate(['/']);
@@ -98,6 +104,7 @@ export class ProjectComponent implements OnInit {
 
     onCloseScreenshot() {
         this.isPreview = false;
+        this.scrollIntoCurrentScreenshot();
     }
 
     get filter() {
