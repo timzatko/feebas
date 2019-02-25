@@ -1,7 +1,12 @@
 <div>
     <div class="screenshot-header">
         <button (click)="onBackClick()" mat-icon-button color="primary"><mat-icon>arrow_back</mat-icon></button>
-        <h1 [ngClass]="getClass()">{{ screenshot.key }}</h1>
+        <span>
+            <mat-checkbox
+                [(ngModel)]="projectService._selected.value[this.screenshot.key]"
+                (ngModelChange)="onSelectChange()"
+            ><h1 [ngClass]="getClass()">{{ screenshot.key }}</h1></mat-checkbox>
+        </span>
     </div>
     <ng-container *ngIf="status_match">
         <p class="success">[OK] The most recent version of this screenshot match the truth screenshot!</p>

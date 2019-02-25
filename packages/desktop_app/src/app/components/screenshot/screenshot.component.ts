@@ -24,6 +24,10 @@ export class ScreenshotComponent implements OnInit {
         this.back.emit();
     }
 
+    onSelectChange() {
+        this.projectService._selected.next(this.projectService.selected);
+    }
+
     get status_match() {
         return this.screenshot.status === Screenshots.Status.match;
     }
