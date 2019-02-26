@@ -51,18 +51,6 @@
             width: 100%;
             overflow: visible;
 
-            &.mat-tree-node-success {
-                color: $success;
-            }
-
-            &.mat-tree-node-warning {
-                color: $warning;
-            }
-
-            &.mat-tree-node-error {
-                color: $error;
-            }
-
             > div {
                 display: flex;
                 flex-direction: row;

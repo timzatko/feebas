@@ -17,12 +17,22 @@
     background: white;
     align-items: center;
     display: grid;
-    grid-template-columns: min-content min-content auto;
+    grid-template-columns: min-content auto;
     grid-column-gap: 8px;
+
+    &.screenshot-status-truth-does-not-exist,
+    &.screenshot-status-do-not-match {
+        grid-template-columns: min-content min-content auto;
+    }
 
     h1 {
         margin-bottom: 0;
-        display: inline-block;
+        display: block;
         word-break: break-all;
+
+        &.screenshot-status-truth-does-not-exist,
+        &.screenshot-status-do-not-match {
+            cursor: pointer;
+        }
     }
 }

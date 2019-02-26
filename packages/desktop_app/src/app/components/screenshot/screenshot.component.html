@@ -1,12 +1,15 @@
 <div>
-    <div class="screenshot-header">
+    <div
+      class="screenshot-header"
+      [ngClass]="getScreenshotClass()"
+    >
         <button (click)="onBackClick()" mat-icon-button color="primary"><mat-icon>arrow_back</mat-icon></button>
-        <span>
-            <mat-checkbox
-                [(ngModel)]="projectService._selected.value[this.screenshot.key]"
-                (ngModelChange)="onSelectChange()"
-            ><h1 [ngClass]="getClass()">{{ screenshot.key }}</h1></mat-checkbox>
-        </span>
+        <mat-checkbox
+            [(ngModel)]="projectService._selected.value[this.screenshot.key]"
+            (ngModelChange)="onCheckboxChange()"
+            *ngIf="status_do_not_match || status_truth_does_not_exist"
+        ></mat-checkbox>
+        <h1 [ngClass]="getScreenshotClass()" (click)="onHeaderClick()">{{ screenshot.key }}</h1>
     </div>
     <ng-container *ngIf="status_match">
         <p class="success">[OK] The most recent version of this screenshot match the truth screenshot!</p>
@@ -17,7 +20,7 @@
         </p>
     </ng-container>
     <ng-container *ngIf="status_truth_does_not_exist">
-        <p class="warning">[WARNING] This screenshot does not exist in truth screenshots!</p>
+        <p class="info">[INFO] This screenshot does not exist in truth screenshots!</p>
     </ng-container>
     <ng-container *ngIf="status_truth_was_not_tested">
         <p class="warning">[WARNING] Truth version of this screenshot exist, however it was not tested!</p>

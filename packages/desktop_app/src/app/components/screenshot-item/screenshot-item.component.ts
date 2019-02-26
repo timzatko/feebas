@@ -32,7 +32,7 @@ export class ScreenshotItemComponent implements OnInit {
         return this.projectService.getLocalImageBase64(screenshot);
     }
 
-    getClass() {
+    getScreenshotItemClass() {
         return { ...getScreenshotClass(this.screenshot.status), caption: true };
     }
 

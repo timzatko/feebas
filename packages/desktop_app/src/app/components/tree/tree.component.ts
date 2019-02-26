@@ -1,16 +1,16 @@
 import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostListener,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    QueryList,
-    SimpleChanges,
-    ViewChildren,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChildren,
 } from '@angular/core';
 import { Screenshots } from '../../models/screenshots';
 import { MatDialog, MatTreeNestedDataSource } from '@angular/material';
@@ -19,6 +19,7 @@ import { ProjectService } from '../../services/project.service';
 import * as path from 'path';
 import { FilterDialogComponent } from '../filter-dialog/filter-dialog.component';
 import { Subscription } from 'rxjs';
+import { getScreenshotClass } from '../../scripts/screenshot';
 
 export type TreeLeaf = Screenshots.Screenshot;
 
@@ -195,13 +196,7 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     getItemClass(item: TreeItem) {
-        return {
-            'mat-tree-node-success': item.status === Screenshots.Status.match,
-            'mat-tree-node-warning':
-                item.status === Screenshots.Status.truth_was_not_tested ||
-                item.status === Screenshots.Status.truth_does_not_exist,
-            'mat-tree-node-error': item.status === Screenshots.Status.do_not_match,
-        };
+        return getScreenshotClass(item.status);
     }
 
     onShowScreenshot(screenshot: Screenshots.Screenshot) {
@@ -217,11 +212,11 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     isCheckboxVisible(screenshot: Screenshots.Screenshot) {
-        return screenshot.status !== Screenshots.Status.match;
+        return screenshot.status === Screenshots.Status.do_not_match || screenshot.status === Screenshots.Status.truth_does_not_exist;
     }
 
     isBulkTreeCheckboxVisible() {
-        return this.projectService.filteredScreenshots.some(({ status }) => status !== Screenshots.Status.match);
+        return this.projectService.filteredScreenshots.some(this.isCheckboxVisible);
     }
 
     updateCheckboxes(selected: { [key: string]: boolean }) {

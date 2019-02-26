@@ -103,6 +103,12 @@ export class ProjectService {
         this._selected.next({ ...this.selected, ...value });
     }
 
+    setSelectedScreenshot(screenshotKey: string, value: boolean) {
+        const selected = this.selected;
+        selected[screenshotKey] = value;
+        this.selected = selected;
+    }
+
     get status() {
         return this.screenshots.reduce((_status, { status }) => Math.max(_status, status), Screenshots.Status.match);
     }

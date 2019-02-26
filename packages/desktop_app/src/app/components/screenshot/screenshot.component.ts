@@ -10,13 +10,14 @@ import { getScreenshotClass } from '../../scripts/screenshot';
 })
 export class ScreenshotComponent implements OnInit {
     @Input() screenshot: Screenshots.Screenshot;
+
     @Output() back = new EventEmitter();
 
     constructor(public projectService: ProjectService) {}
 
     ngOnInit() {}
 
-    getClass() {
+    getScreenshotClass() {
         return getScreenshotClass(this.screenshot.status);
     }
 
@@ -24,8 +25,17 @@ export class ScreenshotComponent implements OnInit {
         this.back.emit();
     }
 
-    onSelectChange() {
+    onCheckboxChange() {
         this.projectService._selected.next(this.projectService.selected);
+    }
+
+    onHeaderClick() {
+        if (this.status_truth_does_not_exist && this.status_do_not_match) {
+            this.projectService.setSelectedScreenshot(
+                this.screenshot.key,
+                !this.projectService.selected[this.screenshot.key],
+            );
+        }
     }
 
     get status_match() {

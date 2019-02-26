@@ -51,14 +51,22 @@ p,
 span,
 div {
     .success,
+    .screenshot-status-match,
     &[color='success'] {
         color: $success;
     }
     .warning,
+    .screenshot-status-truth-was-not-tested,
     &[color='warning'] {
         color: $warning;
     }
+    .info,
+    .screenshot-status-truth-does-not-exist,
+    &[color='info'] {
+        color: $info;
+    }
     .error,
+    .screenshot-status-do-not-match,
     &[color='error'] {
         color: $error;
     }
