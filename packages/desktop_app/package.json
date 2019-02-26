@@ -4,7 +4,7 @@
     "author": "timzatko",
     "main": "main.js",
     "private": true,
-    "version": "0.1.13",
+    "version": "0.1.14",
     "repository": {
         "type": "git",
         "url": "https://github.com/timzatko/feebas"
