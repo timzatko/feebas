@@ -20,6 +20,7 @@ export class ProjectService {
     projectChange = new BehaviorSubject<{ projectId: string; commitId: string }>(null);
 
     currentProject: Project;
+    isCurrentProjectPreview: boolean;
     vcs: Integrations.actions.gitStatus.Interface = { commitId: null, status: null, rootDir: null };
 
     paths: { truth: string; current: string };
@@ -227,6 +228,7 @@ export class ProjectService {
             .pipe(
                 tap(screenshots => {
                     this._screenshots.next(this._updateGitStatusOnScreenshots(screenshots));
+                    this.isCurrentProjectPreview = false;
                 }),
             );
     }

@@ -14,7 +14,7 @@
             <app-tree (screenshotOpen)="onOpenScreenshot($event)" [currentScreenshot]="currentScreenshot"></app-tree>
         </div>
         <div class="content">
-            <ng-container *ngIf="isPreview; else noPreview">
+            <ng-container *ngIf="projectService.isCurrentProjectPreview; else noPreview">
                 <app-screenshot [screenshot]="currentScreenshot" (back)="onCloseScreenshot()"></app-screenshot>
             </ng-container>
             <ng-template #noPreview>

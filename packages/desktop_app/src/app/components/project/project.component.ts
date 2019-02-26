@@ -13,7 +13,6 @@ import { ScreenshotItemComponent } from '../screenshot-item/screenshot-item.comp
 })
 export class ProjectComponent implements OnInit {
     currentScreenshot: Screenshots.Screenshot;
-    isPreview = false;
 
     @ViewChildren(ScreenshotItemComponent) screenshotItems: QueryList<ScreenshotItemComponent>;
 
@@ -66,7 +65,7 @@ export class ProjectComponent implements OnInit {
             this.onCloseScreenshot();
         } else if (event.code === 'Enter') {
             if (this.currentScreenshot) {
-                this.isPreview = true;
+                this.projectService.isCurrentProjectPreview = true;
             }
         }
     }
@@ -98,12 +97,12 @@ export class ProjectComponent implements OnInit {
     }
 
     onOpenScreenshot(screenshot: Screenshots.Screenshot) {
-        this.isPreview = true;
+        this.projectService.isCurrentProjectPreview = true;
         this.currentScreenshot = screenshot;
     }
 
     onCloseScreenshot() {
-        this.isPreview = false;
+        this.projectService.isCurrentProjectPreview = false;
         this.scrollIntoCurrentScreenshot();
     }
 
