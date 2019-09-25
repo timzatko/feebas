@@ -5,6 +5,7 @@ import * as request from 'request-promise-native';
 import * as unzip from 'unzipper';
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import * as log from 'electron-log';
 
 import { Integrations } from '../models/integrations';
 
@@ -16,6 +17,7 @@ const callGitlabApi = function(_url: string, config: { json?: string } = {}) {
     const { url, project_id, authentication } = this.integration;
     const fullUrl = new URL(url + '/api/v4/projects/' + project_id + _url);
     fullUrl.searchParams.set('private_token', authentication.token);
+    log.info('calling gitlab api on ' + fullUrl);
     return request({ url: fullUrl.href, ...config });
 };
 
@@ -54,6 +56,7 @@ const downloadArtifacts = function(job) {
     return new Observable(observer => {
         req.on('response', res => {
             if (res.statusCode !== 200) {
+                log.error('unable to download artifacts');
                 observer.error(new Error('[gitlab] Unable to download artifacts!'));
                 observer.complete();
                 return;
@@ -87,6 +90,7 @@ const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = 
         if (env.variables.hasOwnProperty('FEEBAS_GITLAB_TOKEN')) {
             integration.authentication.token = env.variables.FEEBAS_GITLAB_TOKEN;
         } else {
+            log.error('auth token is not defined!');
             return throwError(
                 new Error(
                     'Authentication token is not defined! Define it in configuration file or in environmental variable FEEBAS_GITLAB_TOKEN.',
