@@ -17,6 +17,7 @@ const helpText = `
 
 	Options
 	  --config              Specify path to configuration file
+	  --debug               Show debug logs
 `;
 
 const cli = meow(helpText, {
@@ -27,11 +28,24 @@ const cli = meow(helpText, {
             default: undefined,
             alias: 'c',
         },
+        debug: {
+            type: 'boolean',
+            alias: 'd',
+        },
     },
 });
 
+function log(message) {
+    if (cli.flags.debug || cli.flags.d) {
+        console.log(message);
+    }
+}
+
+log('starting...');
+
 // check if feebas app is installed, if not, install it
 if (!fs.existsSync(appPath)) {
+    log('installing feebas...');
     require(path.join(__dirname, 'scripts/install.js'));
 }
 
@@ -40,8 +54,12 @@ if (!fs.existsSync(appPath)) {
 let configPath = cli.flags.c || cli.flags.config;
 if (!configPath) {
     configPath = path.join(cwd, 'feebas.config.json');
+    log(`setting config path from current working directory (${configPath})`);
 } else if (!path.isAbsolute(configPath)) {
     configPath = path.join(cwd, configPath);
+    log(`setting config path from current working directory and cli options (${configPath})`);
+} else {
+    log(`setting config path cli options (${configPath})`);
 }
 
 if (!fs.existsSync(configPath)) {
@@ -50,9 +68,26 @@ if (!fs.existsSync(configPath)) {
 }
 
 // run feebas app
-const subProcess = spawn(path.join(__dirname, 'scripts/run', `${app.platform[platform].scriptName}`), [configPath, appPath], {
-    detached: true,
-    cwd: process.cwd(),
-    env: process.env,
+const subProcess = spawn(
+    path.join(__dirname, 'scripts/run', `${app.platform[platform].scriptName}`),
+    [configPath, appPath],
+    {
+        detached: true,
+        cwd: process.cwd(),
+        env: process.env,
+    },
+);
+
+subProcess.stdout.on('data', data => {
+    log(`feebas run sub process stdout: ${data}`);
 });
+
+subProcess.stderr.on('data', data => {
+    log(`feebas run sub process stderr: ${data}`);
+});
+
+subProcess.on('close', code => {
+    log(`feebas run sub process exited with code ${code}`);
+});
+
 subProcess.unref();
