@@ -1,5 +1,6 @@
 import { forkJoin, from, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { StatusResult } from 'simple-git/typings/response';
 
 import { Integrations } from '../models/integrations';
 
@@ -48,7 +49,7 @@ const gitStatus: Integrations.actions.gitStatus.Function<Integrations.FsLocal.In
         from(git.status()),
         from(gitRootDir(screenshotsDirectoryAbsolute)),
     ).pipe(
-        map(([commitId, status, rootDir]) => {
+        map(([commitId, status, rootDir]: [string, StatusResult, string]) => {
             if (!rootDir) {
                 throw new Error(`Cannot find git root directory for ${screenshotsDirectoryAbsolute}!`);
             }
