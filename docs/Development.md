@@ -19,3 +19,7 @@ When updating the app update `desktop_app-version` in packages/node_lib/package.
 ### node library publishing
 
 - run `npm run lib:publish`
+
+# logging
+
+Runtime logs are logged via [electron-log](https://www.npmjs.com/package/electron-log).

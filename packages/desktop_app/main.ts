@@ -2,10 +2,11 @@ import { app, BrowserWindow, screen } from 'electron';
 
 import * as path from 'path';
 import * as url from 'url';
+import * as minimist from 'minimist';
 
-let win, serve;
-const args = process.argv.slice(1);
-serve = args.some(val => val === '--serve');
+let win: BrowserWindow;
+
+const args = minimist(process.argv);
 
 const createWindow = () => {
     if (win) {
@@ -22,7 +23,7 @@ const createWindow = () => {
         height: 600 || size.height,
     });
 
-    if (serve) {
+    if (args.serve) {
         require('electron-reload')(__dirname, {
             electron: require(`${__dirname}/node_modules/electron`),
         });
@@ -37,7 +38,7 @@ const createWindow = () => {
         );
     }
 
-    if (serve) {
+    if (args.serve || args.debug) {
         win.webContents.openDevTools();
     }
 

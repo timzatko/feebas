@@ -17,7 +17,7 @@ const helpText = `
 
 	Options
 	  --config              Specify path to configuration file
-	  --debug               Show debug logs
+	  --debug               Show logs and open dev tools
 `;
 
 const cli = meow(helpText, {
@@ -35,9 +35,11 @@ const cli = meow(helpText, {
     },
 });
 
+const debugEnabled = cli.flags.debug || cli.flags.d;
+
 function log(message) {
-    if (cli.flags.debug || cli.flags.d) {
-        console.log(message);
+    if (debugEnabled) {
+        console.log(`[FEEBAS] ${message}`);
     }
 }
 
@@ -70,7 +72,7 @@ if (!fs.existsSync(configPath)) {
 // run feebas app
 const subProcess = spawn(
     path.join(__dirname, 'scripts/run', `${app.platform[platform].scriptName}`),
-    [configPath, appPath],
+    [configPath, appPath, Number(debugEnabled)],
     {
         detached: true,
         cwd: process.cwd(),
@@ -79,15 +81,15 @@ const subProcess = spawn(
 );
 
 subProcess.stdout.on('data', data => {
-    log(`feebas run sub process stdout: ${data}`);
+    log(`launcher process stdout: ${data}`);
 });
 
 subProcess.stderr.on('data', data => {
-    log(`feebas run sub process stderr: ${data}`);
+    log(`launcher process stderr: ${data}`);
 });
 
 subProcess.on('close', code => {
-    log(`feebas run sub process exited with code ${code}`);
+    log(`launcher process exited with code ${code}`);
 });
 
 subProcess.unref();
