@@ -12,6 +12,12 @@ import GitStatus = Screenshots.GitStatus;
 
 const asPNG = () => new PNG();
 
+interface Image {
+    width: number;
+    height: number;
+    data: any;
+}
+
 const compareScreenshots = (
     current: { path: Screenshots.Directory; screenshots: Screenshots.RelativePath[] },
     truth: { path: Screenshots.Directory; screenshots: Screenshots.RelativePath[] },
@@ -27,14 +33,14 @@ const compareScreenshots = (
                 key: currentRelativePath,
                 path: { current: currentAbsolutePath },
                 status: Screenshots.Status.truth_does_not_exist,
-                gitStatus: GitStatus.not_changed
+                gitStatus: GitStatus.not_changed,
             });
         }
 
         const truthAbsolutePath = path.join(truth.path, truthRelativePath);
 
         const truthImage$ = from(
-            new Promise<any>((resolve, reject) => {
+            new Promise<Image>((resolve, reject) => {
                 const img = fs
                     .createReadStream(currentAbsolutePath)
                     .pipe(asPNG())
@@ -44,7 +50,7 @@ const compareScreenshots = (
         );
 
         const currentImage$ = from(
-            new Promise<any>((resolve, reject) => {
+            new Promise<Image>((resolve, reject) => {
                 const img = fs
                     .createReadStream(truthAbsolutePath)
                     .pipe(asPNG())
@@ -69,7 +75,7 @@ const compareScreenshots = (
                 );
 
                 if (diffPx > 0) {
-                    return new Observable(observer => {
+                    return new Observable<Screenshots.Screenshot>(observer => {
                         const diffPath = getTempDir(path.join('/diff', path.dirname(currentRelativePath)));
                         const diffFile = path.join(diffPath, path.basename(currentRelativePath));
                         const out = diffScreenshot.pack().pipe(fs.createWriteStream(diffFile));
@@ -83,7 +89,7 @@ const compareScreenshots = (
                                     diff: diffFile,
                                 },
                                 status: Screenshots.Status.do_not_match,
-                                gitStatus: GitStatus.not_changed
+                                gitStatus: GitStatus.not_changed,
                             });
                             observer.complete();
                         });
@@ -97,7 +103,7 @@ const compareScreenshots = (
                         truth: truthAbsolutePath,
                     },
                     status: Screenshots.Status.match,
-                    gitStatus: GitStatus.not_changed
+                    gitStatus: GitStatus.not_changed,
                 });
             }),
         );
@@ -116,7 +122,7 @@ const compareScreenshots = (
                         key: truthRelativePath,
                         path: { truth: path.join(truth.path, truthRelativePath) },
                         status: Screenshots.Status.truth_was_not_tested,
-                        gitStatus: GitStatus.not_changed
+                        gitStatus: GitStatus.not_changed,
                     };
                 }
             });
