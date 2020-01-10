@@ -3,7 +3,7 @@
     "description": "Feebas is screenshot comparison tool which is intended to be used as a part of catching the visual regressions in end to end tests.",
     "main": "index.js",
     "author": "timzatko",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "license": "MIT",
     "keywords": [
         "screenshot",
@@ -13,7 +13,7 @@
         "ci",
         "compare"
     ],
-    "desktop_app-version": "0.1.16",
+    "desktop_app-version": "0.1.17",
     "desktop_app-fileName": "feebas-desktop-app",
     "repository": {
         "type": "git",
