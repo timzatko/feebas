@@ -67,6 +67,7 @@ export namespace Integrations {
         export interface Job {
             name: string;
             path: string;
+            directory?: string;
         }
 
         export interface Interface {

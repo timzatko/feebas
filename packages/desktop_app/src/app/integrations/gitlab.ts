@@ -66,7 +66,8 @@ const downloadArtifacts = function(job) {
             out.on('finish', () => {
                 // move unzipped artifacts
                 const jobConfig = this.integration.jobs.find(({ name }) => name === job.name);
-                const dstPath = this.integration.strategy === 'default' ? path.join(outPath, job.name) : outPath;
+                const newOutPath = typeof job.directory !== 'undefined' ? path.join(outPath, job.directory) : outPath;
+                const dstPath = this.integration.strategy === 'default' ? path.join(newOutPath, job.name) : newOutPath;
                 const jobSubPath = path.join(jobOutPath, jobConfig.path);
                 // dstPath should exists
                 fs.ensureDirSync(dstPath);
