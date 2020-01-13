@@ -5,8 +5,8 @@ import { App } from '../models/app';
 import * as minimist from 'minimist';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+
 import getTempDir from '../scripts/get-temp-dir';
-import { type } from 'os';
 
 @Injectable()
 export class AppService {
