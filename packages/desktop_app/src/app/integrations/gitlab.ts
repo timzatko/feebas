@@ -10,6 +10,7 @@ import * as log from 'electron-log';
 import { Integrations } from '../models/integrations';
 
 import getIntegrationTempDir from '../scripts/get-integration-temp-dir';
+import { type } from 'os';
 
 const getOutPath = (commitId: string) => getIntegrationTempDir('gitlab', path.join('commits', commitId.toString()));
 
@@ -124,7 +125,7 @@ const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = 
             flatMap(jobs => {
                 const targetJobs = filterJobs.call({ integration }, jobs);
 
-                if (!integration.jobs.every(job => targetJobs.find(({ name }) => name === job.name))) {
+                if (!integration.jobs.every(job => targetJobs.find(targetJob => isJobMatch(targetJob, job)))) {
                     return throwError(new Error('[gitlab] Some of the jobs did not run in the pipeline!'));
                 }
 
@@ -144,3 +145,11 @@ const integrationResolver: Integrations.Resolver<Integrations.GitLab.Interface> 
 };
 
 export default integrationResolver;
+
+function isJobMatch(jobA: { name: string }, jobB: Integrations.GitLab.Job): boolean {
+    if (typeof jobB === 'string') {
+        return jobA.name === jobB;
+    } else if (Array.isArray(jobB)) {
+        return jobB.indexOf(jobA.name) !== -1;
+    }
+}

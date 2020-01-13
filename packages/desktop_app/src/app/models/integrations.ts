@@ -65,7 +65,7 @@ export namespace Integrations {
         export type AuthenticationType = AuthenticationAccessToken;
 
         export interface Job {
-            name: string;
+            name: string | string[];
             path: string;
             directory?: string;
         }
