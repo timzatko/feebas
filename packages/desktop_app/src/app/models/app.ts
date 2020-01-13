@@ -16,5 +16,6 @@ export namespace App {
         variables?: { [key: string]: any };
         cwd?: string;
         configPath?: string;
+        defaultProject?: string;
     }
 }

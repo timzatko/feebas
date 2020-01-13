@@ -14,6 +14,7 @@ import { StatusResult as GitStatus } from 'simple-git/typings/response';
 import { Router } from '@angular/router';
 import { Integrations } from '../models/integrations';
 import * as path from 'path';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class ProjectService {
@@ -65,8 +66,13 @@ export class ProjectService {
         public loaderService: LoaderService,
         public router: Router,
         public ngZone: NgZone,
+        public snackBar: MatSnackBar,
     ) {
-        if (this.appService.projects.length) {
+        const defaultProject = this.appService.env.defaultProject;
+
+        if (defaultProject) {
+            this.setCurrentProject(defaultProject);
+        } else if (this.appService.projects.length) {
             this.currentProject = this.appService.projects[0];
         }
 
@@ -146,12 +152,13 @@ export class ProjectService {
         });
     }
 
-    load(project: Project, _commitId: string) {
+    load(project: Project, _commitId?: string) {
         this.currentProject = project;
+
         return this.getGitStatus()
             .pipe(
                 flatMap(params => {
-                    if (params.commitId !== _commitId) {
+                    if (_commitId && params.commitId !== _commitId) {
                         return this.gitCheckout(_commitId).pipe(map(() => params));
                     }
                     return of(params);
@@ -235,5 +242,15 @@ export class ProjectService {
 
     getLocalImageBase64(filePath: string) {
         return 'data:image/png;base64,' + fs.readFileSync(filePath).toString('base64');
+    }
+
+    private setCurrentProject(projectId: string) {
+        let commitId;
+
+        if (this.projectChange.getValue()) {
+            ({ commitId } = this.projectChange.getValue());
+        }
+
+        this.projectChange.next({ projectId, commitId });
     }
 }

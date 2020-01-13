@@ -6,6 +6,7 @@ import * as minimist from 'minimist';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import getTempDir from '../scripts/get-temp-dir';
+import { type } from 'os';
 
 @Injectable()
 export class AppService {
@@ -53,6 +54,13 @@ export class AppService {
 
         this.config = config;
         this.env.cwd = path.dirname(configFile); // set current working directory to config file location
+
+        // set default project if is provided from command line
+        const defaultProject = this.argv['project'];
+        if (typeof defaultProject === 'string' && defaultProject.length > 0) {
+            this.env.defaultProject = defaultProject;
+        }
+
         return App.ConfigStatus.OK;
     }
 

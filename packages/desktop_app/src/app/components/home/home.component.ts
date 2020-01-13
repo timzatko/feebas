@@ -38,7 +38,8 @@ export class HomeComponent implements OnInit, OnDestroy {
             if (params) {
                 const currentProject = this.appService.projects.find(
                     ({ name }) => name === params.projectId,
-                ) as Project;
+                );
+
                 if (!currentProject) {
                     return this.snackBarService.open(
                         `Project with name "${params.projectId}" does not exist!`,
@@ -55,7 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
     }
 
-    onSubmit(commitId: string = null) {
+    onSubmit(commitId?: string) {
         const { currentProject } = this.form.getRawValue();
         if (!currentProject) {
             return;

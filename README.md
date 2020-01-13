@@ -55,7 +55,12 @@ Now, when your pipeline fails because of visual regression.
         ]
     }
     ``` 
-   
+
+## running feebas
+
+You can run feebas via `npx feebas`. Possible arguments.
+- __config__ - path to config file, the default path is `./feebas.config.json` relative to repository root. Example: `npx feebas --config=/feebas/feebas.config.json` 
+- __project__ - project to open. If you have only one project defined in configuration file, that project is opened by default. If you have multiple projects, the home page with project selector is opened on feebas launch. If you want to bypass that screen use `project` argument. Example: `npx feebas --project=SomeProjectName` 
 
 ### integrations
 
