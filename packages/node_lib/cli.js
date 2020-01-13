@@ -28,6 +28,11 @@ const cli = meow(helpText, {
             default: undefined,
             alias: 'c',
         },
+        project: {
+            type: 'string',
+            default: undefined,
+            alias: 'p',
+        },
         debug: {
             type: 'boolean',
             alias: 'd',
@@ -35,7 +40,7 @@ const cli = meow(helpText, {
     },
 });
 
-const debugEnabled = cli.flags.debug || cli.flags.d;
+const debugEnabled = cli.flags.debug || cli.flags.d || 0;
 
 function log(message) {
     if (debugEnabled) {
@@ -69,10 +74,13 @@ if (!fs.existsSync(configPath)) {
     process.exit(1);
 }
 
+// open project from arguments
+let defaultProject = cli.flags.p || cli.flags.project || '';
+
 // run feebas app
 const subProcess = spawn(
     path.join(__dirname, 'scripts/run', `${app.platform[platform].scriptName}`),
-    [configPath, appPath, Number(debugEnabled)],
+    [configPath, appPath, Number(debugEnabled), defaultProject],
     {
         detached: true,
         cwd: process.cwd(),
