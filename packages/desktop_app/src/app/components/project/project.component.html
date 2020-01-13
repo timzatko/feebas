@@ -1,7 +1,7 @@
 <ng-container *ngIf="projectService.screenshots !== null">
     <mat-toolbar color="primary">
         <div class="flex v-center space-between">
-            <div class="flex v-center">{{ projectService.vcs.commitId }}</div>
+            <div class="flex v-center">{{ projectService.currentProject.name }} |&nbsp;<span title="Current commit hash">{{ projectService.vcs.commitId }}</span></div>
             <div>
                 <button *ngIf="selectedCount; let count" mat-raised-button color="accent" (click)="onApproveClick()">
                     Approve ({{ count }})

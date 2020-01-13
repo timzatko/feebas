@@ -12,6 +12,19 @@
                     "path": "truth"
                 }
             }
+        },
+        {
+            "name": "other",
+            "screenshots": {
+                "current": {
+                    "type": "fs-local",
+                    "path": "current"
+                },
+                "truth": {
+                    "type": "fs-local",
+                    "path": "truth"
+                }
+            }
         }
     ]
 }

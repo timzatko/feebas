@@ -1,4 +1,8 @@
 :host {
     height: 100%;
     display: block;
+
+    form div {
+        display: grid;
+    }
 }

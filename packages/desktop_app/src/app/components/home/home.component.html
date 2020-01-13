@@ -4,12 +4,18 @@
             <form [formGroup]="form" (submit)="onSubmit()">
                 <div *ngIf="projects.length > 1">
                     <mat-form-field>
-                        <mat-select placeholder="Project" formControlName="project">
+                        <mat-select placeholder="Project" formControlName="currentProject">
                             <mat-option *ngFor="let project of projects" [value]="project">
                                 {{ project.name }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+
+                    <button
+                      type="submit"
+                      mat-flat-button
+                      color="primary"
+                    >Open</button>
                 </div>
             </form>
         </ng-container>
