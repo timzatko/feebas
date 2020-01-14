@@ -10,7 +10,6 @@ import * as log from 'electron-log';
 import { Integrations } from '../models/integrations';
 
 import getIntegrationTempDir from '../scripts/get-integration-temp-dir';
-import { type } from 'os';
 
 const getOutPath = (commitId: string) => getIntegrationTempDir('gitlab', path.join('commits', commitId.toString()));
 
@@ -28,7 +27,9 @@ const callGitlabApiJson = function(_url: string) {
 
 const filterJobs = function(jobs) {
     // filter jobs by name
-    const filteredJobs = jobs.filter(({ name }) => this.integration.jobs.find(job => job.name === name));
+    const filteredJobs = jobs
+        .filter(gitlabJob => ['failed', 'success'].indexOf(gitlabJob.status) !== -1)
+        .filter(gitlabJob => this.integration.jobs.find(job => isJobMatch(gitlabJob, job)));
 
     return Object.values(
         filteredJobs.reduce((obj, job) => {
@@ -47,6 +48,8 @@ const filterJobs = function(jobs) {
 };
 
 const downloadArtifacts = function(job) {
+    log.info(`[gitlab] downloading artifacts for ${job.name} (${job.id.toString()})`);
+
     const outPath = getOutPath(this.commitId);
     // path where will be temporarily stored unzipped artifacts
     const jobOutPath = getIntegrationTempDir('gitlab', path.join('jobs', job.id.toString()));
@@ -57,8 +60,9 @@ const downloadArtifacts = function(job) {
     return new Observable(observer => {
         req.on('response', res => {
             if (res.statusCode !== 200) {
-                log.error('unable to download artifacts');
-                observer.error(new Error('[gitlab] Unable to download artifacts!'));
+                const logMessage = `unable to download artifacts for ${job.name} (${job.id.toString()})`;
+                log.error(logMessage);
+                observer.error(new Error(logMessage));
                 observer.complete();
                 return;
             }
@@ -66,17 +70,21 @@ const downloadArtifacts = function(job) {
             const out = res.pipe(unzip.Extract({ path: jobOutPath }));
             out.on('finish', () => {
                 // move unzipped artifacts
-                const jobConfig = this.integration.jobs.find(({ name }) => name === job.name);
-                const newOutPath = typeof job.directory !== 'undefined' ? path.join(outPath, job.directory) : outPath;
+                const jobConfig = this.integration.jobs.find((integrationJob) => isJobMatch(job, integrationJob));
+
+                const newOutPath = typeof jobConfig.directory !== 'undefined' ? path.join(outPath, jobConfig.directory) : outPath;
                 const dstPath = this.integration.strategy === 'default' ? path.join(newOutPath, job.name) : newOutPath;
                 const jobSubPath = path.join(jobOutPath, jobConfig.path);
                 // dstPath should exists
                 fs.ensureDirSync(dstPath);
+
                 // if subdirectory in job artifacts exists, move it
                 if (fs.pathExistsSync(jobSubPath)) {
+                    log.info(`[gitlab] moving artifacts from ${jobSubPath} to ${dstPath}...`);
                     fs.moveSync(jobSubPath, dstPath);
                 }
                 // remove remaining job artifacts
+                log.info(`[gitlab] removing remaining job artifacts in ${jobOutPath}`);
                 fs.removeSync(jobOutPath);
 
                 observer.next();
@@ -147,9 +155,9 @@ const integrationResolver: Integrations.Resolver<Integrations.GitLab.Interface> 
 export default integrationResolver;
 
 function isJobMatch(jobA: { name: string }, jobB: Integrations.GitLab.Job): boolean {
-    if (typeof jobB === 'string') {
-        return jobA.name === jobB;
-    } else if (Array.isArray(jobB)) {
-        return jobB.indexOf(jobA.name) !== -1;
+    if (typeof jobB.name === 'string') {
+        return jobA.name === jobB.name;
+    } else if (Array.isArray(jobB.name)) {
+        return jobB.name.indexOf(jobA.name) !== -1;
     }
 }
