@@ -1,4 +1,5 @@
 import { Integrations } from '../models/integrations';
+import { LoaderService } from '../services/loader.service';
 import { of, throwError } from 'rxjs';
 
 import fsLocal from './fs-local';
@@ -10,8 +11,8 @@ const integrations: { [key: string]: Integrations.Resolver } = {
 };
 
 const resolver: Integrations.Resolver = {
-    pull(params: Integrations.actions.pull.Params) {
-        return integrations[params.integration.type].pull(params);
+    pull(params: Integrations.actions.pull.Params, loaderService: LoaderService) {
+        return integrations[params.integration.type].pull(params, loaderService);
     },
     push(params: Integrations.actions.push.Params) {
         if (typeof integrations[params.integration.type].push !== 'function') {

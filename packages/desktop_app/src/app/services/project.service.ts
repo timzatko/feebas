@@ -180,12 +180,12 @@ export class ProjectService {
                 integration: this.currentProject.screenshots.current,
                 commitId: commitId,
                 env: this.appService.env,
-            }),
+            }, this.loaderService),
             integrations.pull({
                 integration: this.currentProject.screenshots.truth,
                 commitId: commitId,
                 env: this.appService.env,
-            }),
+            }, this.loaderService),
         )
             .pipe(
                 flatMap(([current, truth]) => {

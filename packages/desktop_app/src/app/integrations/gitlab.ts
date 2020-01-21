@@ -1,5 +1,6 @@
 import { forkJoin, from, Observable, of, throwError } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, tap } from 'rxjs/operators';
+import { LoaderService } from '../services/loader.service';
 
 import * as request from 'request-promise-native';
 import * as unzip from 'unzipper';
@@ -70,9 +71,10 @@ const downloadArtifacts = function(job) {
             const out = res.pipe(unzip.Extract({ path: jobOutPath }));
             out.on('finish', () => {
                 // move unzipped artifacts
-                const jobConfig = this.integration.jobs.find((integrationJob) => isJobMatch(job, integrationJob));
+                const jobConfig = this.integration.jobs.find(integrationJob => isJobMatch(job, integrationJob));
 
-                const newOutPath = typeof jobConfig.directory !== 'undefined' ? path.join(outPath, jobConfig.directory) : outPath;
+                const newOutPath =
+                    typeof jobConfig.directory !== 'undefined' ? path.join(outPath, jobConfig.directory) : outPath;
                 const dstPath = this.integration.strategy === 'default' ? path.join(newOutPath, job.name) : newOutPath;
                 const jobSubPath = path.join(jobOutPath, jobConfig.path);
                 // dstPath should exists
@@ -94,7 +96,10 @@ const downloadArtifacts = function(job) {
     });
 };
 
-const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = ({ integration, commitId, env }) => {
+const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = (
+    { integration, commitId, env },
+    loaderService: LoaderService,
+) => {
     const authToken = integration.authentication.token;
     if (!authToken) {
         if (env.variables.hasOwnProperty('FEEBAS_GITLAB_TOKEN')) {
@@ -125,6 +130,8 @@ const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = 
                     return throwError(new Error(`[gitlab] Pipeline is still running!`));
                 }
 
+                loaderService.message = 'fetching the last pipeline information...';
+
                 // get jobs for the last pipeline of the commit
                 return from(callApi('/pipelines/' + id + '/jobs?per_page=100'));
             }),
@@ -137,8 +144,18 @@ const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = 
                     return throwError(new Error('[gitlab] Some of the jobs did not run in the pipeline!'));
                 }
 
+                let downloadedArtifactsCount = 0;
+                loaderService.message = `downloading job artifacts... (0/${targetJobs.length})`;
+
                 // download all artifacts
-                return forkJoin(targetJobs.map(job => downloadArtifacts.call({ integration, commitId }, job)));
+                return forkJoin(
+                    targetJobs.map(job => {
+                        return downloadArtifacts.call({ integration, commitId }, job).pipe(tap(() => {
+                            downloadedArtifactsCount++;
+                            loaderService.message = `downloading job artifacts... (${downloadedArtifactsCount}/${targetJobs.length})`;
+                        }));
+                    }),
+                );
             }),
         )
         .pipe(

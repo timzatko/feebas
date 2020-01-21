@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { Screenshots } from './screenshots';
 import { App } from './app';
 import { StatusResult } from 'simple-git/typings/response';
+import { LoaderService } from '../services/loader.service';
 
 export namespace Integrations {
     export namespace actions {
@@ -11,7 +12,7 @@ export namespace Integrations {
                 env: App.Env;
                 commitId: string;
             }
-            export type Function<T> = (params: Params<T>) => Observable<{ path: string }>;
+            export type Function<T> = (params: Params<T>, loaderService: LoaderService) => Observable<{ path: string }>;
         }
 
         export namespace push {
