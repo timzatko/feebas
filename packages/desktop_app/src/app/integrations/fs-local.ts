@@ -58,8 +58,19 @@ const gitStatus: Integrations.actions.gitStatus.Function<Integrations.FsLocal.In
 
             // change paths in git from relative to git root, to relative to integration screenshot directory
             ['modified', 'not_added', 'renamed', 'staged'].forEach(key => {
-                status[key] = status[key].map(_path => {
-                    return path.relative(relative, _path);
+                status[key] = status[key].map(filePath => {
+                    if (typeof filePath === 'string') {
+                        return path.relative(relative, filePath);
+                    } else {
+                        // renamed status can be an object { from: 'path1', to: 'path2' }
+
+                        for (const filePathKey in filePath) {
+                            if (filePath.hasOwnProperty(filePathKey)) {
+                                filePath[filePathKey] = path.relative(relative, filePath[filePathKey]);
+                            }
+                        }
+                        return filePath;
+                    }
                 });
             });
 
