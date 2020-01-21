@@ -8,6 +8,8 @@ import { PNG } from 'pngjs';
 import * as pixelmatch from 'pixelmatch';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as log from 'electron-log';
+
 import GitStatus = Screenshots.GitStatus;
 
 const asPNG = () => new PNG();
@@ -41,21 +43,25 @@ const compareScreenshots = (
 
         const truthImage$ = from(
             new Promise<Image>((resolve, reject) => {
+                log.info(`[compare screenshots] reading truth screenshot from ${truthAbsolutePath}`);
+
                 const img = fs
-                    .createReadStream(currentAbsolutePath)
+                    .createReadStream(truthAbsolutePath)
                     .pipe(asPNG())
                     .on('parsed', () => resolve(img))
-                    .on('error', () => reject(img));
+                    .on('error', e => reject(e));
             }),
         );
 
         const currentImage$ = from(
             new Promise<Image>((resolve, reject) => {
+                log.info(`[compare screenshots] reading current screenshot from ${currentAbsolutePath}`);
+
                 const img = fs
-                    .createReadStream(truthAbsolutePath)
+                    .createReadStream(currentAbsolutePath)
                     .pipe(asPNG())
                     .on('parsed', () => resolve(img))
-                    .on('error', () => reject(img));
+                    .on('error', e => reject(e));
             }),
         );
 
