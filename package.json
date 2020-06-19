@@ -11,10 +11,19 @@
         "lib:dev:fs-local": "cd packages/node_lib && npm run dev:fs-local",
         "lib:publish": "cd packages/node_lib && npm publish",
         "lib:start": "cd packages/node_lib && npm run dev",
-        "start": "npm run app:start:fs-local"
+        "lint": "npm-run-all lint:desktop_app lint:node_lib",
+        "lint:desktop_app": "cd packages/desktop_app && npm run lint",
+        "lint:node_lib": "cd packages/node_lib && npm run lint",
+        "prettier": "prettier \"**/*.{js,ts,json,html,css}\"",
+        "prettier:write": "npm run prettier -- --write",
+        "prettier:lint": "npm run prettier -- --list-different",
+        "start": "npm run app:start:fs-local",
+        "tsc": "npm-run-all tsc:desktop_app",
+        "tsc:desktop_app": "cd packages/desktop_app && npm run tsc"
     },
     "devDependencies": {
-        "lerna": "^3.22.1"
+        "lerna": "^3.22.1",
+        "npm-run-all": "^4.1.5"
     },
     "dependencies": {
         "prettier": "^2.0.5"
