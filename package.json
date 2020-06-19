@@ -10,12 +10,13 @@
         "lib:publish": "cd packages/node_lib && npm publish",
         "lib:start": "cd packages/node_lib && npm run dev",
         "lib:dev": "cd packages/node_lib && npm run dev",
-        "lib:dev:fs-local": "cd packages/node_lib && npm run dev:fs-local"
+        "lib:dev:fs-local": "cd packages/node_lib && npm run dev:fs-local",
+        "lint:prettier": "prettier . --list-different"
     },
     "devDependencies": {
         "lerna": "^3.22.1"
     },
     "dependencies": {
-        "prettier": "^1.19.1"
+        "prettier": "^2.0.5"
     }
 }

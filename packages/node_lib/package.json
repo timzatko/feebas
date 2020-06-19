@@ -29,7 +29,7 @@
         "dev:build": "npm run app:build && node scripts/install.js --dev && npm run start --",
         "dev:build:fs-local": "npm run dev:build -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "app:build": "cd ../desktop_app && npm run electron:build",
-        "postinstall": "node ./scripts/install",
+        "postinstall": "node ../../scripts/postinstall.js && node ./scripts/install",
         "prepublishOnly": "node ./scripts/pre-publish"
     },
     "dependencies": {
@@ -41,6 +41,7 @@
         "tempfile": "^2.0.0"
     },
     "devDependencies": {
-        "ncp": "^2.0.0"
+        "ncp": "^2.0.0",
+        "prettier": "^2.0.5",
     }
 }
