@@ -21,7 +21,7 @@ const unzip = filePath => {
 };
 
 const getAppFileName = () => {
-    const fileName = feebas['desktop_app-fileName'] + '-' + feebas['desktop_app-version'];
+    const fileName = feebas['desktop_app-fileName'] + '-' + feebas['version'];
     if (platform === 'darwin') {
         return Promise.resolve(fileName + '-mac.7z');
     } else if (platform === 'linux') {

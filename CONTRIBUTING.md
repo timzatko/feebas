@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node (v12.6.x)
+-   Node (v12.6.x)
 
 ## Setup
 
@@ -12,27 +12,27 @@ Install dependencies by running `npm install && lerna bootstrap` [what is lerna?
 
 ### App development
 
-- run `npm start` and define the path to configuration file in env variable `FEEBAS_DEV_CONFIG` or run `npm run app:start:fs-local` with predefined config. It uses the config from `./packages/desktop_app/integrations/fs-local`. 
+-   run `npm start` and define the path to configuration file in env variable `FEEBAS_DEV_CONFIG` or run `npm run app:start:fs-local` with predefined config. It uses the config from `./packages/desktop_app/integrations/fs-local`.
 
 ## NPM Package Development
 
-- run `npm run lib:dev`
+-   run `npm run lib:dev`
 
 ## Releasing a new versions
 
-When updating the app update `desktop_app-version` in packages/node_lib/package.json.
+-   run `npm version major.minor.patch` to bump the version (this will bump the version for both, the desktop app and the node library)
 
 ### App releasing
 
 This will release a new binary of the desktop app to the GitHub.
 
-- run `npm run app:release`
+-   run `npm run app:release`
 
 ### NPM Package Publishing
 
 This will publish package to the npm registry.
 
-- run `npm run lib:publish`
+-   run `npm run lib:publish`
 
 ## Debugging
 

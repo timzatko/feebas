@@ -1,6 +1,6 @@
 {
     "name": "feebas",
-    "private": true,
+    "version": "0.1.22",
     "scripts": {
         "app:release": "cd packages/desktop_app && npm run app:release",
         "app:start": "cd packages/desktop_app && npm run start",

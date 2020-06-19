@@ -83,7 +83,7 @@ const subProcess = spawn(
         detached: true,
         cwd: process.cwd(),
         env: process.env,
-    },
+    }
 );
 
 subProcess.stdout.on('data', data => {
