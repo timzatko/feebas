@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node ()
+- Node (v12.6.x)
 
 ## Setup
 
