@@ -16,15 +16,14 @@ export class ScreenshotItemComponent implements OnInit {
 
     constructor(public projectService: ProjectService, public elementRef: ElementRef) {}
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     get gitStatusTitle() {
         return `${this.screenshot.gitStatus} (git)`;
     }
 
     get gitStatusKey() {
-      return this.screenshot.gitStatus.toString().toUpperCase().charAt(0);
+        return this.screenshot.gitStatus.toString().toUpperCase().charAt(0);
     }
 
     get image() {
@@ -37,7 +36,9 @@ export class ScreenshotItemComponent implements OnInit {
     }
 
     onLabelClick() {
-        this.projectService._selected.value[this.screenshot.key] = !this.projectService._selected.value[this.screenshot.key];
+        this.projectService._selected.value[this.screenshot.key] = !this.projectService._selected.value[
+            this.screenshot.key
+        ];
         this.onCheckboxChange();
     }
 
@@ -50,7 +51,7 @@ export class ScreenshotItemComponent implements OnInit {
     }
 
     scrollIntoView() {
-      this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' });
+        this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' });
     }
 
     get isCheckboxVisible() {

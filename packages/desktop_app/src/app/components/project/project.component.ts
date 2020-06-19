@@ -92,7 +92,7 @@ export class ProjectComponent implements OnInit {
 
     ngOnInit() {
         if (this.projectService.screenshots === null) {
-            this.router.navigate(['/'])
+            this.router.navigate(['/']);
         }
     }
 

@@ -36,9 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this.subscription = this.projectService.projectChange.asObservable().subscribe(params => {
             if (params) {
-                const currentProject = this.appService.projects.find(
-                    ({ name }) => name === params.projectId,
-                );
+                const currentProject = this.appService.projects.find(({ name }) => name === params.projectId);
 
                 if (!currentProject) {
                     return this.snackBarService.open(

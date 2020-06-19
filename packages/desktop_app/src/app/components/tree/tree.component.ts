@@ -1,16 +1,16 @@
 import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  ViewChildren,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    ViewChildren,
 } from '@angular/core';
 import { Screenshots } from '../../models/screenshots';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -213,7 +213,10 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     isCheckboxVisible(screenshot: Screenshots.Screenshot) {
-        return screenshot.status === Screenshots.Status.do_not_match || screenshot.status === Screenshots.Status.truth_does_not_exist;
+        return (
+            screenshot.status === Screenshots.Status.do_not_match ||
+            screenshot.status === Screenshots.Status.truth_does_not_exist
+        );
     }
 
     isBulkTreeCheckboxVisible() {

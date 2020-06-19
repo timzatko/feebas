@@ -106,8 +106,4 @@ const onError = error => {
 
 const outPath = path.join(__dirname, '../app');
 
-getAppFileName()
-    .then(downloadApp)
-    .then(installApp)
-    .then(onSuccess)
-    .catch(onError);
+getAppFileName().then(downloadApp).then(installApp).then(onSuccess).catch(onError);

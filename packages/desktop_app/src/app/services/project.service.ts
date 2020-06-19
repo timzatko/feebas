@@ -48,7 +48,11 @@ export class ProjectService {
 
     private _updateGitStatusOnScreenshots(screenshots: Screenshots.Screenshot[]): Screenshots.Screenshot[] {
         return screenshots.map(screenshot => {
-            const screenshotGitStatus = (['modified', 'not_added', 'staged'] as ('modified' | 'not_added' | 'staged')[]).find(key => {
+            const screenshotGitStatus = (['modified', 'not_added', 'staged'] as (
+                | 'modified'
+                | 'not_added'
+                | 'staged'
+            )[]).find(key => {
                 return this.vcs.status[key].indexOf(screenshot.key) !== -1;
             });
 
@@ -76,10 +80,7 @@ export class ProjectService {
 
         this.appService.electronService.ipcRenderer.on('open-url', (_: any, url: string) => {
             console.log(`open-url - ${url}`);
-            const [projectId, commitId] = url
-                .toString()
-                .split('//')[1]
-                .split(':');
+            const [projectId, commitId] = url.toString().split('//')[1].split(':');
 
             this.currentProject = null;
             this.ngZone.run(() =>
@@ -129,10 +130,12 @@ export class ProjectService {
     get filteredScreenshots() {
         const filter: any = this.filter.getRawValue();
         return (this.screenshots || []).filter(({ status }) => {
-            return Object.keys(filter)
-                .filter(key => filter[key])
-                // @ts-ignore
-                .some(key => status === Screenshots.Status[key]);
+            return (
+                Object.keys(filter)
+                    .filter(key => filter[key])
+                    // @ts-ignore
+                    .some(key => status === Screenshots.Status[key])
+            );
         });
     }
 
@@ -175,16 +178,22 @@ export class ProjectService {
         this.screenshots = null;
 
         return forkJoin(
-            integrations.pull({
-                integration: this.currentProject.screenshots.current,
-                commitId: commitId,
-                env: this.appService.env,
-            }, this.loaderService),
-            integrations.pull({
-                integration: this.currentProject.screenshots.truth,
-                commitId: commitId,
-                env: this.appService.env,
-            }, this.loaderService),
+            integrations.pull(
+                {
+                    integration: this.currentProject.screenshots.current,
+                    commitId: commitId,
+                    env: this.appService.env,
+                },
+                this.loaderService,
+            ),
+            integrations.pull(
+                {
+                    integration: this.currentProject.screenshots.truth,
+                    commitId: commitId,
+                    env: this.appService.env,
+                },
+                this.loaderService,
+            ),
         )
             .pipe(
                 flatMap(([current, truth]) => {

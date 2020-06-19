@@ -12,7 +12,7 @@ import { Integrations } from '../models/integrations';
 
 import getIntegrationTempDir from '../scripts/get-integration-temp-dir';
 
-type IntegrationContext = { integration: Integrations.GitLab.Interface }
+type IntegrationContext = { integration: Integrations.GitLab.Interface };
 type CommitContext = { commitId: string };
 type GitlabJob = {
     id: string;
@@ -22,7 +22,7 @@ type GitlabJob = {
 
 const getOutPath = (commitId: string) => getIntegrationTempDir('gitlab', path.join('commits', commitId.toString()));
 
-const callGitlabApi = function(_url: string, config: { json?: string } = {}) {
+const callGitlabApi = function (_url: string, config: { json?: string } = {}) {
     const { url, project_id, authentication } = this.integration;
     const fullUrl = new URL(`${url}/api/v4/projects/${project_id}_url`);
     fullUrl.searchParams.set('private_token', authentication.token);
@@ -30,19 +30,19 @@ const callGitlabApi = function(_url: string, config: { json?: string } = {}) {
     return request({ url: fullUrl.href, ...config });
 };
 
-const callGitlabApiJson = function(_url: string) {
+const callGitlabApiJson = function (_url: string) {
     return callGitlabApi.bind(this)(_url, { json: true });
 };
 
-const isJobMatch = function(jobA: { name: string }, jobB: Integrations.GitLab.Job): boolean {
+const isJobMatch = function (jobA: { name: string }, jobB: Integrations.GitLab.Job): boolean {
     if (typeof jobB.name === 'string') {
         return jobA.name === jobB.name;
     } else if (Array.isArray(jobB.name)) {
         return jobB.name.indexOf(jobA.name) !== -1;
     }
-}
+};
 
-const filterJobs = function(this: IntegrationContext, jobs: GitlabJob[]): GitlabJob[] {
+const filterJobs = function (this: IntegrationContext, jobs: GitlabJob[]): GitlabJob[] {
     // filter jobs by name
     const filteredJobs = jobs
         .filter(gitlabJob => ['failed', 'success'].indexOf(gitlabJob.status) !== -1)
@@ -64,7 +64,7 @@ const filterJobs = function(this: IntegrationContext, jobs: GitlabJob[]): Gitlab
     );
 };
 
-const downloadArtifacts = function(this: IntegrationContext & CommitContext, job: GitlabJob) {
+const downloadArtifacts = function (this: IntegrationContext & CommitContext, job: GitlabJob) {
     log.info(`[gitlab] downloading artifacts for ${job.name} (${job.id.toString()})`);
 
     const outPath = getOutPath(this.commitId);
@@ -166,10 +166,12 @@ const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = 
                 // download all artifacts
                 return forkJoin(
                     targetJobs.map(job => {
-                        return downloadArtifacts.call({ integration, commitId }, job).pipe(tap(() => {
-                            downloadedArtifactsCount++;
-                            loaderService.message = `downloading job artifacts... (${downloadedArtifactsCount}/${targetJobs.length})`;
-                        }));
+                        return downloadArtifacts.call({ integration, commitId }, job).pipe(
+                            tap(() => {
+                                downloadedArtifactsCount++;
+                                loaderService.message = `downloading job artifacts... (${downloadedArtifactsCount}/${targetJobs.length})`;
+                            }),
+                        );
                     }),
                 );
             }),

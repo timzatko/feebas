@@ -1,9 +1,12 @@
 <div class="flex container v-center h-center">
     <h3 [ngSwitch]="appService.configStatus">
         <ng-container *ngSwitchCase="configStatusValues.CONFIG_FILE_NOT_DEFINED"
-        >Configuration file is not defined!</ng-container>
+            >Configuration file is not defined!</ng-container
+        >
         <ng-container *ngSwitchCase="configStatusValues.CONFIG_FILE_NOT_EXISTS"
-        >Configuration file not found in <i>{{ appService.env.configPath }}</i>!</ng-container>
+            >Configuration file not found in <i>{{ appService.env.configPath }}</i
+            >!</ng-container
+        >
         <ng-container *ngSwitchCase="configStatusValues.INCORRECT_JSON">Configuration JSON is invalid!</ng-container>
     </h3>
 </div>

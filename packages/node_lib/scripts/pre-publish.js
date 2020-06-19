@@ -6,7 +6,7 @@ const ncp = require('ncp');
 fs.copySync(path.join(__dirname, '../../../README.md'), path.join(__dirname, '../README.md'));
 
 // copy docs folder from the root directory
-ncp(path.join(__dirname, '../../../docs'), path.join(__dirname, '../docs'), (err) => {
+ncp(path.join(__dirname, '../../../docs'), path.join(__dirname, '../docs'), err => {
     if (err) {
         process.exit(1);
     }

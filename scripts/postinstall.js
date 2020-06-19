@@ -1,8 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 
-const src = path.join(__dirname, '..',  '.prettierrc');
-const dst = path.join(process.cwd(),  '.prettierrc');
+const src = path.join(__dirname, '..', '.prettierrc');
+const dst = path.join(process.cwd(), '.prettierrc');
 
 if (fs.existsSync(dst)) {
     fs.unlinkSync(dst);

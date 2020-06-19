@@ -1,8 +1,5 @@
 <div>
-    <div
-      class="screenshot-header"
-      [ngClass]="getScreenshotClass()"
-    >
+    <div class="screenshot-header" [ngClass]="getScreenshotClass()">
         <button (click)="onBackClick()" mat-icon-button color="primary"><mat-icon>arrow_back</mat-icon></button>
         <mat-checkbox
             [(ngModel)]="projectService._selected.value[this.screenshot.key]"
