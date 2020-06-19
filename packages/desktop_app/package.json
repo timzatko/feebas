@@ -41,13 +41,14 @@
     "is-image": "^2.0.0",
     "klaw-sync": "^6.0.0",
     "lodash": "^4.17.15",
+    "minimist": "^1.2.0",
+    "node-7z-forall": "^1.0.5",
     "pixelmatch": "^4.0.2",
     "pngjs": "^3.3.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "simple-git": "^1.107.0",
-    "unzipper": "^0.9.7",
-    "minimist": "^1.2.0"
+    "unzipper": "^0.9.7"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.22",
