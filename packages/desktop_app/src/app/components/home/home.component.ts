@@ -2,11 +2,11 @@ import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/project';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { LoaderService } from '../../services/loader.service';
 import { AppService } from '../../services/app.service';
 import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-home',

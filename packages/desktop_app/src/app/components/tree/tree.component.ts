@@ -13,13 +13,14 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { Screenshots } from '../../models/screenshots';
-import { MatDialog, MatTreeNestedDataSource } from '@angular/material';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { ProjectService } from '../../services/project.service';
 import * as path from 'path';
 import { FilterDialogComponent } from '../filter-dialog/filter-dialog.component';
 import { Subscription } from 'rxjs';
 import { getScreenshotClass } from '../../scripts/screenshot';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { MatDialog } from '@angular/material/dialog';
 
 export type TreeLeaf = Screenshots.Screenshot;
 
@@ -82,7 +83,7 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
     private buildTree() {
         const screenshots = this.projectService.filteredScreenshots;
 
-        const treeInsert = (tree: Tree, item: TreeItem, level: number = 0) => {
+        const treeInsert = (tree: Tree, item: TreeItem, level = 0) => {
             if (level + 1 < item.key.split(path.sep).length) {
                 const subKey = item.key
                     .split(path.sep)
@@ -153,7 +154,7 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
                 this.setTree();
                 // unselect screenshots which are hidden by active filters
                 this.projectService._selected.next(
-                    this.projectService.filteredScreenshots.reduce((obj, { key }) => {
+                    this.projectService.filteredScreenshots.reduce<Record<string, boolean>>((obj, { key }) => {
                         obj[key] = this.projectService.selected[key];
                         return obj;
                     }, {}),
@@ -168,7 +169,7 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         const currentScreenshot = changes.currentScreenshot.currentValue;
-        
+
         if (currentScreenshot && this.screenshots) {
             const screenshot = this.screenshots.find(
                 item => item.nativeElement.getAttribute('data-key') === currentScreenshot.key,
@@ -235,7 +236,7 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
     onBulkSelect(value: boolean) {
         this.projectService.selected = this.projectService.filteredScreenshots
             .map(({ key }) => key)
-            .reduce((obj, key) => {
+            .reduce<Record<string, boolean>>((obj, key) => {
                 obj[key] = value;
                 return obj;
             }, {});
@@ -247,7 +248,7 @@ export class TreeComponent implements OnInit, OnDestroy, OnChanges {
         );
         this.projectService.selected = screenshots
             .map(({ key }) => key)
-            .reduce((obj, key) => {
+            .reduce<Record<string, boolean>>((obj, key) => {
                 obj[key] = selected;
                 return obj;
             }, {});

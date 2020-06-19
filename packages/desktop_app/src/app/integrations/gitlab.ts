@@ -12,13 +12,21 @@ import { Integrations } from '../models/integrations';
 
 import getIntegrationTempDir from '../scripts/get-integration-temp-dir';
 
+type IntegrationContext = { integration: Integrations.GitLab.Interface }
+type CommitContext = { commitId: string };
+type GitlabJob = {
+    id: string;
+    name: string;
+    status: string;
+};
+
 const getOutPath = (commitId: string) => getIntegrationTempDir('gitlab', path.join('commits', commitId.toString()));
 
 const callGitlabApi = function(_url: string, config: { json?: string } = {}) {
     const { url, project_id, authentication } = this.integration;
-    const fullUrl = new URL(url + '/api/v4/projects/' + project_id + _url);
+    const fullUrl = new URL(`${url}/api/v4/projects/${project_id}_url`);
     fullUrl.searchParams.set('private_token', authentication.token);
-    log.info('calling gitlab api on ' + fullUrl);
+    log.info(`calling gitlab api on ${fullUrl}`);
     return request({ url: fullUrl.href, ...config });
 };
 
@@ -26,14 +34,22 @@ const callGitlabApiJson = function(_url: string) {
     return callGitlabApi.bind(this)(_url, { json: true });
 };
 
-const filterJobs = function(jobs) {
+const isJobMatch = function(jobA: { name: string }, jobB: Integrations.GitLab.Job): boolean {
+    if (typeof jobB.name === 'string') {
+        return jobA.name === jobB.name;
+    } else if (Array.isArray(jobB.name)) {
+        return jobB.name.indexOf(jobA.name) !== -1;
+    }
+}
+
+const filterJobs = function(this: IntegrationContext, jobs: GitlabJob[]): GitlabJob[] {
     // filter jobs by name
     const filteredJobs = jobs
         .filter(gitlabJob => ['failed', 'success'].indexOf(gitlabJob.status) !== -1)
         .filter(gitlabJob => this.integration.jobs.find(job => isJobMatch(gitlabJob, job)));
 
     return Object.values(
-        filteredJobs.reduce((obj, job) => {
+        filteredJobs.reduce<Record<string, GitlabJob>>((obj, job) => {
             // filter out duplicates
             if (!obj[job.name]) {
                 obj[job.name] = job;
@@ -48,7 +64,7 @@ const filterJobs = function(jobs) {
     );
 };
 
-const downloadArtifacts = function(job) {
+const downloadArtifacts = function(this: IntegrationContext & CommitContext, job: GitlabJob) {
     log.info(`[gitlab] downloading artifacts for ${job.name} (${job.id.toString()})`);
 
     const outPath = getOutPath(this.commitId);
@@ -56,10 +72,10 @@ const downloadArtifacts = function(job) {
     const jobOutPath = getIntegrationTempDir('gitlab', path.join('jobs', job.id.toString()));
     const callApi = callGitlabApi.bind(this);
 
-    const req = callApi('/jobs/' + job.id + '/artifacts');
+    const req = callApi(`/jobs/${job.id}/artifacts`);
 
     return new Observable(observer => {
-        req.on('response', res => {
+        req.on('response', (res: any) => {
             if (res.statusCode !== 200) {
                 const logMessage = `unable to download artifacts for ${job.name} (${job.id.toString()})`;
                 log.error(logMessage);
@@ -117,7 +133,7 @@ const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = 
     const callApi = callGitlabApiJson.bind({ integration });
 
     // read commit information
-    return from(callApi('/repository/commits/' + commitId))
+    return from(callApi(`/repository/commits/${commitId}`))
         .pipe(
             flatMap(({ last_pipeline }) => {
                 if (!last_pipeline) {
@@ -133,12 +149,12 @@ const pull: Integrations.actions.pull.Function<Integrations.GitLab.Interface> = 
                 loaderService.message = 'fetching the last pipeline information...';
 
                 // get jobs for the last pipeline of the commit
-                return from(callApi('/pipelines/' + id + '/jobs?per_page=100'));
+                return from(callApi(`/pipelines/${id}/jobs?per_page=100`));
             }),
         )
         .pipe(
-            flatMap(jobs => {
-                const targetJobs = filterJobs.call({ integration }, jobs);
+            flatMap((jobs: GitlabJob[]) => {
+                const targetJobs: GitlabJob[] = filterJobs.call({ integration }, jobs);
 
                 if (!integration.jobs.every(job => targetJobs.find(targetJob => isJobMatch(targetJob, job)))) {
                     return throwError(new Error('[gitlab] Some of the jobs did not run in the pipeline!'));
@@ -170,11 +186,3 @@ const integrationResolver: Integrations.Resolver<Integrations.GitLab.Interface> 
 };
 
 export default integrationResolver;
-
-function isJobMatch(jobA: { name: string }, jobB: Integrations.GitLab.Job): boolean {
-    if (typeof jobB.name === 'string') {
-        return jobA.name === jobB.name;
-    } else if (Array.isArray(jobB.name)) {
-        return jobB.name.indexOf(jobA.name) !== -1;
-    }
-}

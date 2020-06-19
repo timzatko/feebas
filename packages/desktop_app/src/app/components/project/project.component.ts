@@ -2,9 +2,9 @@ import { Component, HostListener, OnInit, QueryList, ViewChildren } from '@angul
 import { ProjectService } from '../../services/project.service';
 import { Router } from '@angular/router';
 import { Screenshots } from '../../models/screenshots';
-import { MatSnackBar } from '@angular/material';
 import { LoaderService } from '../../services/loader.service';
 import { ScreenshotItemComponent } from '../screenshot-item/screenshot-item.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-project',
@@ -92,7 +92,7 @@ export class ProjectComponent implements OnInit {
 
     ngOnInit() {
         if (this.projectService.screenshots === null) {
-            this.router.navigate(['/']);
+            this.router.navigate(['/'])
         }
     }
 

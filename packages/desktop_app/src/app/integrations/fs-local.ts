@@ -7,6 +7,7 @@ import { Integrations } from '../models/integrations';
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as simpleGit from 'simple-git/promise';
+// @ts-ignore
 import * as gitRootDir from 'git-root-dir';
 
 const pull: Integrations.actions.pull.Function<Integrations.FsLocal.Interface> = ({ env, integration }) => {
@@ -58,12 +59,12 @@ const gitStatus: Integrations.actions.gitStatus.Function<Integrations.FsLocal.In
 
             // change paths in git from relative to git root, to relative to integration screenshot directory
             ['modified', 'not_added', 'renamed', 'staged'].forEach(key => {
+                // @ts-ignore
                 status[key] = status[key].map(filePath => {
                     if (typeof filePath === 'string') {
                         return path.relative(relative, filePath);
                     } else {
                         // renamed status can be an object { from: 'path1', to: 'path2' }
-
                         for (const filePathKey in filePath) {
                             if (filePath.hasOwnProperty(filePathKey)) {
                                 filePath[filePathKey] = path.relative(relative, filePath[filePathKey]);

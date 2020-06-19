@@ -66,7 +66,7 @@ export class AppService {
 
     // when opening feebas via URL, cli.js from library is not called so the configuration file is not passed in the arguments
     // save the arguments into the temp file
-    private getArgv() {
+    private getArgv(): minimist.ParsedArgs {
         const argv = minimist(this.electronService.remote.process.argv);
         const tempFile = path.join(getTempDir(), 'last-args.json');
 

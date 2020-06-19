@@ -10,10 +10,8 @@ import { Project } from '../models/project';
 import * as fs from 'fs';
 import { FormControl, FormGroup } from '@angular/forms';
 import integrations from '../integrations/integrations';
-import { StatusResult as GitStatus } from 'simple-git/typings/response';
 import { Router } from '@angular/router';
 import { Integrations } from '../models/integrations';
-import * as path from 'path';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
@@ -48,9 +46,9 @@ export class ProjectService {
         );
     }
 
-    private _updateGitStatusOnScreenshots(screenshots: Screenshots.Screenshot[]) {
+    private _updateGitStatusOnScreenshots(screenshots: Screenshots.Screenshot[]): Screenshots.Screenshot[] {
         return screenshots.map(screenshot => {
-            const screenshotGitStatus = ['modified', 'not_added', 'renamed', 'staged'].find(key => {
+            const screenshotGitStatus = (['modified', 'not_added', 'staged'] as ('modified' | 'not_added' | 'staged')[]).find(key => {
                 return this.vcs.status[key].indexOf(screenshot.key) !== -1;
             });
 
@@ -76,8 +74,8 @@ export class ProjectService {
             this.currentProject = this.appService.projects[0];
         }
 
-        this.appService.electronService.ipcRenderer.on('open-url', (_, url) => {
-            console.log('open-url - ' + url);
+        this.appService.electronService.ipcRenderer.on('open-url', (_: any, url: string) => {
+            console.log(`open-url - ${url}`);
             const [projectId, commitId] = url
                 .toString()
                 .split('//')[1]
@@ -129,10 +127,11 @@ export class ProjectService {
     }
 
     get filteredScreenshots() {
-        const filter = this.filter.getRawValue();
+        const filter: any = this.filter.getRawValue();
         return (this.screenshots || []).filter(({ status }) => {
             return Object.keys(filter)
                 .filter(key => filter[key])
+                // @ts-ignore
                 .some(key => status === Screenshots.Status[key]);
         });
     }

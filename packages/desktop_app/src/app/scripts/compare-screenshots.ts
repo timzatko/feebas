@@ -5,6 +5,7 @@ import { Screenshots } from '../models/screenshots';
 import getTempDir from './get-temp-dir';
 
 import { PNG } from 'pngjs';
+// @ts-ignore
 import * as pixelmatch from 'pixelmatch';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -45,7 +46,7 @@ const compareScreenshots = (
             new Promise<Image>((resolve, reject) => {
                 log.info(`[compare screenshots] reading truth screenshot from ${truthAbsolutePath}`);
 
-                const img = fs
+                const img: PNG = fs
                     .createReadStream(truthAbsolutePath)
                     .pipe(asPNG())
                     .on('parsed', () => resolve(img))
@@ -57,7 +58,7 @@ const compareScreenshots = (
             new Promise<Image>((resolve, reject) => {
                 log.info(`[compare screenshots] reading current screenshot from ${currentAbsolutePath}`);
 
-                const img = fs
+                const img: PNG = fs
                     .createReadStream(currentAbsolutePath)
                     .pipe(asPNG())
                     .on('parsed', () => resolve(img))
@@ -117,8 +118,11 @@ const compareScreenshots = (
 
     return forkJoin(current.screenshots.map(compareCurrentScreenshot)).pipe(
         map(screenshots => {
-            const screenshotsMap: { [key: string]: Screenshots.Screenshot } = screenshots.reduce((obj, screenshot) => {
+            const screenshotsMap: { [key: string]: Screenshots.Screenshot } = screenshots.reduce<
+                Record<string, Screenshots.Screenshot>
+            >((obj, screenshot) => {
                 obj[screenshot.key] = screenshot;
+
                 return obj;
             }, {});
 

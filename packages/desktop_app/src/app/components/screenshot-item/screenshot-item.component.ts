@@ -20,7 +20,7 @@ export class ScreenshotItemComponent implements OnInit {
     }
 
     get gitStatusTitle() {
-        return this.screenshot.gitStatus + ' (git)';
+        return `${this.screenshot.gitStatus} (git)`;
     }
 
     get gitStatusKey() {
