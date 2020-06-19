@@ -28,6 +28,7 @@
         "dev:build": "npm run app:build && node scripts/install.js --dev && npm run start --",
         "dev:build:fs-local": "npm run dev:build -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "dev:fs-local": "npm run dev -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
+        "lint": "eslint .",
         "postinstall": "node ../../scripts/postinstall.js && node ./scripts/install",
         "prepublishOnly": "node ./scripts/pre-publish",
         "start": "./cli.js"
@@ -41,7 +42,8 @@
         "tempfile": "^2.0.0"
     },
     "devDependencies": {
+        "eslint": "^7.3.0",
         "ncp": "^2.0.0",
-        "prettier": "^2.0.5",
+        "prettier": "^2.0.5"
     }
 }
