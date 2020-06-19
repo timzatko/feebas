@@ -19,7 +19,8 @@
         "prettier:lint": "npm run prettier -- --list-different",
         "start": "npm run app:start:fs-local",
         "tsc": "npm-run-all tsc:desktop_app",
-        "tsc:desktop_app": "cd packages/desktop_app && npm run tsc"
+        "tsc:desktop_app": "cd packages/desktop_app && npm run tsc",
+        "postversion": "node scripts/version.js"
     },
     "devDependencies": {
         "lerna": "^3.22.1",
