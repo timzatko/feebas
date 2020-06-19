@@ -8,13 +8,13 @@ Feebas is screenshot comparison tool which is intended to be used as a part of c
 
 ```npm install --save-dev feebas```
 
-# how it works?
+# How it works?
 
 The basic philosophy of feebas is to compare __current__ screenshots (e.g. screenshots taken during e2e tests in pipeline) with __truth__ screenshots which defines the desired appearance of the application. 
  
  ![app preview](./docs/images/app_preview.png)
  
-# recommended setup and workflow
+# Recommended Setup and Workflow
  
 1. Screenshot your application during e2e tests in pipeline (e.g. gitlab pipeline) and save the screenshots as job artifacts. If you are using [Cypress](https://github.com/cypress-io/cypress) you can use [screenshot](https://docs.cypress.io/api/commands/screenshot.html#Syntax) function to take screenshots.  
 2. Define the truth screenshots (e.g. with first run of the pipeline) and save them into your repository. Setup [GIT LFS](https://git-lfs.github.com/) for your repository to handle the big files.
@@ -33,11 +33,11 @@ Now, when your pipeline fails because of visual regression.
    - Fix the source of visual regression (bug)
    - Push the fix and proceed to the first step
 
-## setup
+## Setup
 
 1. Install feebas ```npm install --save-dev feebas``` (you probably want it as a dev dependency)
-2. Create `feebas.config.json` in your project root, the file should look like this. Alternatively you can provide path to configuration file - `npx feebas --config ./example/path/to/feebas.config.json`. Example file with gitlab integration is available [here](./docs/Configuration.md).
-    ```json
+2. Create `feebas.config.json` in your project root, the file should look like this. Alternatively you can provide path to configuration file - `npx feebas --config ./example/path/to/feebas.config.json`. Example file with gitlab integration is available [here](docs/CONFIGURATION.md).
+    ```
     {
         "projects": [
             {
@@ -56,15 +56,15 @@ Now, when your pipeline fails because of visual regression.
     }
     ``` 
 
-## running feebas
+## Running feebas
 
 You can run feebas via `npx feebas`. Possible arguments.
 - __config__ - path to config file, the default path is `./feebas.config.json` relative to repository root. Example: `npx feebas --config=/feebas/feebas.config.json` 
 - __project__ - project to open. If you have only one project defined in configuration file, that project is opened by default. If you have multiple projects, the home page with project selector is opened on feebas launch. If you want to bypass that screen use `project` argument. Example: `npx feebas --project=SomeProjectName` 
 
-### integrations
+### Integrations
 
-#### gitlab
+#### Gitlab
 
 - `url` - string - gitlab url
 - `project_id` - number - id of the gitlab project - repository
@@ -91,11 +91,11 @@ You can run feebas via `npx feebas`. Possible arguments.
             }
          ```
 
-### opening specific project and commit (experimental)
+### Opening Specific Project and Commit (experimental)
 
 It is possible to open feebas from your browser. Just open URL in this format:
 `feebas://projectId:commitId`. 
 
-# Development
+# Contributing
 
-Development instructions are available [here](./docs/Development.md).
+Contributing guidelines are available in [CONTRIBUTING.md](./CONTRIBUTING.md).
