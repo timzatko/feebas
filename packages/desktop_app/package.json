@@ -30,8 +30,8 @@
   },
   "dependencies": {
     "@angular/animations": "^9.1.11",
-    "@angular/cdk": "^7.3.7",
-    "@angular/material": "^7.3.7",
+    "@angular/cdk": "^9.2.4",
+    "@angular/material": "^9.2.4",
     "combined-stream": "^1.0.8",
     "electron-log": "^3.0.9",
     "fs-extra": "^7.0.1",
