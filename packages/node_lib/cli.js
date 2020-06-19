@@ -21,16 +21,14 @@ const helpText = `
 `;
 
 const cli = meow(helpText, {
-    booleanDefault: undefined,
+    booleanDefault: false,
     flags: {
         config: {
             type: 'string',
-            default: undefined,
             alias: 'c',
         },
         project: {
             type: 'string',
-            default: undefined,
             alias: 'p',
         },
         debug: {
