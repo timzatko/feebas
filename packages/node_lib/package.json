@@ -13,7 +13,6 @@
         "ci",
         "compare"
     ],
-    "desktop_app-version": "0.1.22",
     "desktop_app-fileName": "feebas-desktop-app",
     "repository": {
         "type": "git",

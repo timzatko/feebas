@@ -40,7 +40,7 @@ const downloadApp = appFileName => {
     }
 
     return new Promise((resolve, reject) => {
-        const fileUrl = url + '/releases/download/v' + feebas['desktop_app-version'] + '/' + appFileName;
+        const fileUrl = url + '/releases/download/v' + feebas['version'] + '/' + appFileName;
         const tmpPath = tempFile();
 
         const cliProgress = require('cli-progress');
