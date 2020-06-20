@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+console.log(process.argv);
+
 function read(path) {
     return JSON.parse(fs.readFileSync(path, { flag: 'r' }).toString('utf-8'));
 }

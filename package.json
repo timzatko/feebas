@@ -14,7 +14,7 @@
         "lint": "npm-run-all lint:desktop_app lint:node_lib",
         "lint:desktop_app": "cd packages/desktop_app && npm run lint",
         "lint:node_lib": "cd packages/node_lib && npm run lint",
-        "postversion": "node scripts/version.js",
+        "preversion": "node scripts/version.js $1",
         "prettier": "prettier \"**/*.{js,ts,json,html,css}\"",
         "prettier:write": "npm run prettier -- --write",
         "prettier:lint": "npm run prettier -- --list-different",
