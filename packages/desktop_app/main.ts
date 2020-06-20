@@ -21,6 +21,9 @@ const createWindow = () => {
         y: 0,
         width: 1000 || size.width,
         height: 600 || size.height,
+        webPreferences: {
+            nodeIntegration: true,
+        },
     });
 
     if (args.serve) {
