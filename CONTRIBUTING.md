@@ -20,19 +20,12 @@ Install dependencies by running `npm install && lerna bootstrap` [what is lerna?
 
 ## Releasing a new versions
 
--   run `npm version major.minor.patch` to bump the version (this will bump the version for both, the desktop app and the node library)
-
-### App releasing
-
-This will release a new binary of the desktop app to the GitHub.
-
--   run `npm run app:release`
-
-### NPM Package Publishing
-
-This will publish package to the npm registry.
-
--   run `npm run lib:publish`
+1.  run `npm version major.minor.patch` to bump the version (this will bump the version for both, the desktop app and the node library)
+1.  run `npm tag major.minor.patch` to create a tag
+1.  run `git push --tags` to push the created tag
+1.  run `npm run app:release` to release the app, it will create a draft release on GitHub
+1.  via GitHub interface publish the drafted release
+1.  run `npm run lib:publish` to piblish the npm package
 
 ## Debugging
 
