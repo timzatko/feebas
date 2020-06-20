@@ -50,7 +50,6 @@ import { FilterDialogComponent } from './components/filter-dialog/filter-dialog.
         BrowserAnimationsModule,
     ],
     providers: [ElectronService, AppService, ProjectService, LoaderService],
-    entryComponents: [FilterDialogComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
