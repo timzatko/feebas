@@ -14,13 +14,13 @@
         "lint": "npm-run-all lint:desktop_app lint:node_lib",
         "lint:desktop_app": "cd packages/desktop_app && npm run lint",
         "lint:node_lib": "cd packages/node_lib && npm run lint",
+        "postversion": "node scripts/version.js",
         "prettier": "prettier \"**/*.{js,ts,json,html,css}\"",
         "prettier:write": "npm run prettier -- --write",
         "prettier:lint": "npm run prettier -- --list-different",
         "start": "npm run app:start:fs-local",
         "tsc": "npm-run-all tsc:desktop_app",
-        "tsc:desktop_app": "cd packages/desktop_app && npm run tsc",
-        "postversion": "node scripts/version.js"
+        "tsc:desktop_app": "cd packages/desktop_app && npm run tsc"
     },
     "devDependencies": {
         "husky": "^4.2.5",
