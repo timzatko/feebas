@@ -8,7 +8,9 @@
 
 Feebas is screenshot comparison tool which is intended to be used as a part of catching the visual regressions in end to end tests.
 
-`npm install --save-dev feebas`
+```bash
+npm install --save-dev feebas
+```
 
 # How it works?
 
