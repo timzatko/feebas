@@ -9,7 +9,6 @@ const unzip7z = require('node-7z-forall');
 const app = require('./../app');
 
 const platform = os.platform();
-const url = 'https://github.com/timzatko/feebas';
 const feebas = require('./../package');
 
 const unzip = filePath => {
@@ -21,7 +20,7 @@ const unzip = filePath => {
 };
 
 const getAppFileName = () => {
-    const fileName = feebas['desktop_app-fileName'] + '-' + feebas['version'];
+    const fileName = feebas['desktopApp'] + '-' + feebas['version'];
     if (platform === 'darwin') {
         return Promise.resolve(fileName + '-mac.7z');
     } else if (platform === 'linux') {
@@ -30,7 +29,7 @@ const getAppFileName = () => {
         return Promise.resolve(fileName + '.exe');
     }
     // TODO: other platforms
-    return Promise.reject(`feebas is not available for platform  ${platform}`);
+    return Promise.reject(`feebas is not available for platform ${platform}`);
 };
 
 const downloadApp = appFileName => {
@@ -40,7 +39,7 @@ const downloadApp = appFileName => {
     }
 
     return new Promise((resolve, reject) => {
-        const fileUrl = url + '/releases/download/v' + feebas['version'] + '/' + appFileName;
+        const fileUrl = feebas.repository.url + '/releases/download/v' + feebas['version'] + '/' + appFileName;
         const tmpPath = tempFile();
 
         const cliProgress = require('cli-progress');
@@ -80,7 +79,7 @@ const installApp = appPath => {
     if (platform === 'darwin') {
         // on OSX unzip 7z file and move .app file from it
         return unzip(appPath).then(folderPath => {
-            const osxFileName = feebas['desktop_app-fileName'] + '.app'; // feebas-desktop-app.app
+            const osxFileName = feebas['desktopApp'] + '.app'; // feebas-desktop-app.app
             fs.moveSync(path.join(folderPath, osxFileName), outFile);
             return Promise.resolve();
         });

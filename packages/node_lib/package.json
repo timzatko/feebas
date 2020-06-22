@@ -13,7 +13,7 @@
         "ci",
         "compare"
     ],
-    "desktop_app-fileName": "feebas-desktop-app",
+    "desktopApp": "feebas-desktop-app",
     "repository": {
         "type": "git",
         "url": "https://github.com/timzatko/feebas"
@@ -42,7 +42,6 @@
     },
     "devDependencies": {
         "eslint": "^7.3.0",
-        "ncp": "^2.0.0",
-        "prettier": "^2.0.5"
+        "ncp": "^2.0.0"
     }
 }
