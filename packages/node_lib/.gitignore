@@ -1,4 +1,10 @@
+# dev
 node_modules
+
+# the location where the app is downloaded
 app
-README.md
+
+# files copied from the repostory root when package is being published
 docs
+README.md
+LICENSE
