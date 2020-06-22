@@ -10,13 +10,12 @@
         "test",
         "visual regression",
         "e2e",
-        "ci",
-        "compare"
+        "ci"
     ],
     "desktopApp": "feebas-desktop-app",
     "repository": {
         "type": "git",
-        "url": "https://github.com/timzatko/feebas"
+        "url": "git+https://github.com/timzatko/feebas"
     },
     "bin": {
         "feebas": "cli.js"
