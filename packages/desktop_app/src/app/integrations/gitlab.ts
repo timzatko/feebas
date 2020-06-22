@@ -22,16 +22,16 @@ type GitlabJob = {
 
 const getOutPath = (commitId: string) => getIntegrationTempDir('gitlab', path.join('commits', commitId.toString()));
 
-const callGitlabApi = function (_url: string, config: { json?: string } = {}) {
+const callGitlabApi = function (urlPath: string, config: { json?: string } = {}) {
     const { url, project_id, authentication } = this.integration;
-    const fullUrl = new URL(`${url}/api/v4/projects/${project_id}_url`);
+    const fullUrl = new URL(`${url}/api/v4/projects/${project_id}${urlPath}`);
     fullUrl.searchParams.set('private_token', authentication.token);
     log.info(`calling gitlab api on ${fullUrl}`);
     return request({ url: fullUrl.href, ...config });
 };
 
-const callGitlabApiJson = function (_url: string) {
-    return callGitlabApi.bind(this)(_url, { json: true });
+const callGitlabApiJson = function (urlPath: string) {
+    return callGitlabApi.bind(this)(urlPath, { json: true });
 };
 
 const isJobMatch = function (jobA: { name: string }, jobB: Integrations.GitLab.Job): boolean {
