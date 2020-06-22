@@ -1,6 +1,6 @@
 {
     "name": "feebas",
-    "version": "0.1.23",
+    "version": "0.1.24",
     "scripts": {
         "app:release": "cd packages/desktop_app && npm run app:release",
         "app:start": "cd packages/desktop_app && npm run start",
