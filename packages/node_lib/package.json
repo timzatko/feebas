@@ -15,7 +15,7 @@
     "desktopApp": "feebas-desktop-app",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/timzatko/feebas"
+        "url": "git+https://github.com/timzatko/feebas.git"
     },
     "bin": {
         "feebas": "cli.js"

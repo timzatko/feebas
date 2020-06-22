@@ -40,7 +40,11 @@ const downloadApp = appFileName => {
 
     return new Promise((resolve, reject) => {
         const fileUrl =
-            feebas.repository.url.replace(/git\+/, '') + '/releases/download/v' + feebas['version'] + '/' + appFileName;
+            feebas.repository.url.replace(/(git\+|\.git)/g, '') +
+            '/releases/download/v' +
+            feebas['version'] +
+            '/' +
+            appFileName;
         const tmpPath = tempFile();
 
         const cliProgress = require('cli-progress');
