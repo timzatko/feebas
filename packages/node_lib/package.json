@@ -3,7 +3,7 @@
     "description": "Feebas is screenshot comparison tool which is intended to be used as a part of catching the visual regressions in end to end tests.",
     "main": "index.js",
     "author": "timzatko",
-    "version": "0.1.23",
+    "version": "0.1.24",
     "license": "MIT",
     "keywords": [
         "screenshot",
@@ -28,7 +28,7 @@
         "dev:build:fs-local": "npm run dev:build -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "dev:fs-local": "npm run dev -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "lint": "eslint .",
-        "postinstall": "node ../../scripts/postinstall.js && node ./scripts/install",
+        "postinstall": "node ./scripts/install",
         "prepublishOnly": "node ./scripts/pre-publish",
         "start": "./cli.js"
     },

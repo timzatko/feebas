@@ -1,2 +1,6 @@
-dist
-release
+# app
+packages/desktop_app/dist
+packages/desktop_app/release
+
+# node_lib
+packages/node_lib/app
