@@ -29,3 +29,5 @@ Install dependencies by running `npm install && lerna bootstrap` [what is lerna?
 ## Debugging
 
 Runtime logs are logged via [electron-log](https://www.npmjs.com/package/electron-log).
+
+Also, you can run feebas with the `debug` flag (`npx feebas --debug`). This will open the JavaScript console in the application window, also the logs will be print out to your terminal.
