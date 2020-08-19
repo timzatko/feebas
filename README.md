@@ -1,6 +1,7 @@
 # feebas
 
 [![CI](https://github.com/timzatko/feebas/workflows/CI/badge.svg?branch=master)](https://github.com/timzatko/feebas/actions?query=workflow:CI+branch:master)
+[![npm version](https://badge.fury.io/js/feebas.svg)](https://badge.fury.io/js/feebas)
 
 <p align="center">
     <img alt="feebas logo" src="./packages/desktop_app/src/favicon.256x256.png?raw=true">
