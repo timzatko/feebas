@@ -97,17 +97,19 @@ const installApp = appPath => {
 
 const onSuccess = () => {
     console.log('\n');
-    console.log('feebas was successfuly installed!');
+    console.log('feebas was successfully installed!');
     process.exit(0);
 };
 
 const onError = error => {
     const errorMessage = error.message || error;
-    console.log('\n');
-    console.log(errorMessage);
-    process.exit(0);
+    console.error('\n');
+    console.error('installation of feebas failed with error', errorMessage);
+    process.exit(2);
 };
 
 const outPath = path.join(__dirname, '../app');
 
-getAppFileName().then(downloadApp).then(installApp).then(onSuccess).catch(onError);
+module.exports = function () {
+    return getAppFileName().then(downloadApp).then(installApp).then(onSuccess).catch(onError);
+};
