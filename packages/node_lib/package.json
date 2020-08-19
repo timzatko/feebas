@@ -27,7 +27,7 @@
         "dev:build:fs-local": "npm run dev:build -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "dev:fs-local": "npm run dev -- --config=../desktop_app/integrations/fs-local/feebas.config.json",
         "lint": "eslint .",
-        "postinstall": "node ./scripts/install",
+        "postinstall": "node ./scripts/run-install",
         "prepublishOnly": "node ./scripts/pre-publish",
         "start": "./cli.js"
     },
