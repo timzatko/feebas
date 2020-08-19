@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs-extra');
 
 const request = require('request');
-const tempFile = require('tempfile');
-const unzip7z = require('node-7z-forall');
+const tmp = require('tmp');
+const tar = require('tar');
 
 const app = require('./../app');
 
@@ -12,23 +12,27 @@ const platform = os.platform();
 const feebas = require('./../package');
 
 const unzip = filePath => {
-    const folderName = tempFile();
-    const unzip7zInstance = new unzip7z();
-    return unzip7zInstance.extractFull(filePath, folderName).then(() => {
-        return Promise.resolve(folderName);
-    });
+    const target = tmp.dirSync().name;
+
+    return tar
+        .extract({
+            file: filePath,
+            cwd: target,
+        })
+        .then(() => {
+            return Promise.resolve(target);
+        });
 };
 
 const getAppFileName = () => {
     const fileName = feebas['desktopApp'] + '-' + feebas['version'];
     if (platform === 'darwin') {
-        return Promise.resolve(fileName + '-mac.7z');
+        return Promise.resolve(fileName + '-mac.tar.gz');
     } else if (platform === 'linux') {
         return Promise.resolve(fileName + '-x86_64.AppImage');
     } else if (platform === 'win32') {
         return Promise.resolve(fileName + '.exe');
     }
-    // TODO: other platforms
     return Promise.reject(`feebas is not available for platform ${platform}`);
 };
 
@@ -45,7 +49,7 @@ const downloadApp = appFileName => {
             feebas['version'] +
             '/' +
             appFileName;
-        const tmpPath = tempFile();
+        const tmpPath = tmp.fileSync().name;
 
         const cliProgress = require('cli-progress');
         console.log('Downloading feebas...');
@@ -54,6 +58,9 @@ const downloadApp = appFileName => {
         request.get(fileUrl).on('response', res => {
             if (res.statusCode !== 200) {
                 reject(`[ERROR] Unable do download feebas app! (source at ${fileUrl} does not exist!)`);
+
+                // do not exit with error since the npm install would fail
+                process.exit(0);
             }
             bar.start(res.headers['content-length'], 0);
 

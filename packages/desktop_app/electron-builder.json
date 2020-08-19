@@ -28,7 +28,7 @@
     },
     "mac": {
         "icon": "dist",
-        "target": ["7z"],
+        "target": ["dir"],
         "publish": ["github"],
         "extendInfo": {
             "CFBundleURLName": ["feebas"],
@@ -48,5 +48,6 @@
     "protocols": {
         "name": "feebas",
         "schemes": ["feebas"]
-    }
+    },
+    "afterAllArtifactBuild": "./scripts/after-all-artifacts-build.js"
 }
